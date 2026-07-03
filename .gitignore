@@ -1,0 +1,29 @@
+# --- SYSTEM FILES ---
+.DS_Store
+Thumbs.db
+
+# --- IDEs & EDITORS ---
+.idea/
+.vscode/
+*.swp
+*.iml
+.classpath
+.project
+.settings/
+
+# --- NODE / FRONTEND ---
+**/node_modules/
+**/dist/
+**/.next/
+**/out/
+**/.cache/
+**/.angular/
+.env*.local
+.env
+
+# --- JAVA / GRADLE ---
+**/.gradle/
+**/build/
+**/bin/
+*.class
+*.log
