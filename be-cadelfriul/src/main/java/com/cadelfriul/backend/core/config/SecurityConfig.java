@@ -6,6 +6,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -13,15 +18,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Disabilita i controlli incrociati per testare le API
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 1. Abilita le regole CORS
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Apre tutte le porte a tutti (solo per lo sviluppo!)
+                        .anyRequest().permitAll()
                 );
 
         return http.build();
     }
 
-    // Aggiunto il PasswordEncoder per permettere all'AdminService di hashare le password
+    // 2. Definizione delle regole CORS globali
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Permetti a qualsiasi dominio di collegarsi (utile in fase di sviluppo)
+        configuration.setAllowedOriginPatterns(List.of("*"));
+
+        // Permetti esplicitamente PUT, DELETE e OPTIONS (il famoso preflight)
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+        // Permetti qualsiasi header (incluso Authorization per il futuro token JWT)
+        configuration.setAllowedHeaders(List.of("*"));
+
+        // Permette l'invio di credenziali (come i cookie di sessione se serviranno)
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration); // Applica queste regole a TUTTI gli endpoint
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
