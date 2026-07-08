@@ -1,9 +1,11 @@
 package com.cadelfriul.backend.core.auth.service;
 
+import com.cadelfriul.backend.core.auth.dto.AddressRequest;
 import com.cadelfriul.backend.core.auth.dto.CustomerCreateRequest;
 import com.cadelfriul.backend.core.auth.dto.CustomerLogResponse;
 import com.cadelfriul.backend.core.auth.dto.CustomerResponse;
 import com.cadelfriul.backend.core.auth.dto.CustomerUpdateRequest;
+import com.cadelfriul.backend.core.auth.entity.Address;
 import com.cadelfriul.backend.core.auth.entity.Customer;
 import com.cadelfriul.backend.core.auth.entity.CustomerLog;
 import com.cadelfriul.backend.core.auth.repository.CustomerLogRepository;
@@ -59,6 +61,23 @@ public class CustomerService {
                 request.getPhone()
         );
 
+        if (request.getShippingAddress() != null) {
+            Address shipping = toAddress(request.getShippingAddress());
+            shipping.setDefaultShipping(true);
+
+            if (request.getBillingAddress() == null) {
+                shipping.setDefaultBilling(true);
+            }
+
+            customer.addAddress(shipping);
+        }
+
+        if (request.getBillingAddress() != null) {
+            Address billing = toAddress(request.getBillingAddress());
+            billing.setDefaultBilling(true);
+            customer.addAddress(billing);
+        }
+
         CustomerLog log = new CustomerLog(null, "CREATED", "Customer account created");
         customer.addLog(log);
 
@@ -104,6 +123,40 @@ public class CustomerService {
             customer.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
+        if (request.getShippingAddress() != null) {
+            Address existing = customer.getAddresses().stream()
+                    .filter(Address::isDefaultShipping)
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing != null) {
+                applyAddressRequest(existing, request.getShippingAddress());
+                details.append("Shipping address updated; ");
+            } else {
+                Address shipping = toAddress(request.getShippingAddress());
+                shipping.setDefaultShipping(true);
+                customer.addAddress(shipping);
+                details.append("Shipping address added; ");
+            }
+        }
+
+        if (request.getBillingAddress() != null) {
+            Address existing = customer.getAddresses().stream()
+                    .filter(Address::isDefaultBilling)
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing != null) {
+                applyAddressRequest(existing, request.getBillingAddress());
+                details.append("Billing address updated; ");
+            } else {
+                Address billing = toAddress(request.getBillingAddress());
+                billing.setDefaultBilling(true);
+                customer.addAddress(billing);
+                details.append("Billing address added; ");
+            }
+        }
+
         if (!details.isEmpty()) {
             CustomerLog log = new CustomerLog(null, "UPDATED", details.toString());
             customer.addLog(log);
@@ -128,5 +181,27 @@ public class CustomerService {
                 .stream()
                 .map(CustomerLogResponse::new)
                 .toList();
+    }
+
+    private Address toAddress(AddressRequest request) {
+        Address address = new Address();
+        address.setStreet(request.getStreet());
+        address.setHouseNumber(request.getHouseNumber());
+        address.setCity(request.getCity());
+        address.setZipCode(request.getZipCode());
+        address.setProvince(request.getProvince());
+        address.setCountry(request.getCountry());
+        address.setAdditionalInfo(request.getAdditionalInfo());
+        return address;
+    }
+
+    private void applyAddressRequest(Address address, AddressRequest request) {
+        if (request.getStreet() != null) address.setStreet(request.getStreet());
+        if (request.getHouseNumber() != null) address.setHouseNumber(request.getHouseNumber());
+        if (request.getCity() != null) address.setCity(request.getCity());
+        if (request.getZipCode() != null) address.setZipCode(request.getZipCode());
+        if (request.getProvince() != null) address.setProvince(request.getProvince());
+        if (request.getCountry() != null) address.setCountry(request.getCountry());
+        if (request.getAdditionalInfo() != null) address.setAdditionalInfo(request.getAdditionalInfo());
     }
 }
