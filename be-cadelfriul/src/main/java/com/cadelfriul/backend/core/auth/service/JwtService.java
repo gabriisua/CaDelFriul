@@ -1,5 +1,7 @@
 package com.cadelfriul.backend.core.auth.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,5 +44,25 @@ public class JwtService {
 
     public long getExpirationMs() {
         return expirationMs;
+    }
+
+    public String extractEmail(String token) {
+        return parseToken(token).getPayload().getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            parseToken(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private Jws<Claims> parseToken(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token);
     }
 }
