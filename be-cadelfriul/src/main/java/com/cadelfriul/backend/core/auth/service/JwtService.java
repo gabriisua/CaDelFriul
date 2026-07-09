@@ -50,6 +50,10 @@ public class JwtService {
         return parseToken(token).getPayload().getSubject();
     }
 
+    public String extractRole(String token) {
+        return parseToken(token).getPayload().get("role", String.class);
+    }
+
     public boolean isTokenValid(String token) {
         try {
             parseToken(token);
