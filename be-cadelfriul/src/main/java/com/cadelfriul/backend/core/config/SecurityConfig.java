@@ -43,6 +43,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/customer/login").permitAll()
                         .requestMatchers("/api/auth/customer/register").permitAll()
                         .requestMatchers("/api/auth/password-reset/**").permitAll()
+
+                        // --- ENDPOINT PUBBLICI PRODOTTI ---
+                        .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // --- TUTTO IL RESTO È PROTETTO (incluso /api/auth/me) ---

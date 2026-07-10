@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -36,26 +37,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        if (!jwtService.isTokenValid(token)) {
-            filterChain.doFilter(request, response);
-            return;
+        try {
+            if (!jwtService.isTokenValid(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String email = jwtService.extractEmail(token);
+            String role = jwtService.extractRole(token);
+            String adminRole = jwtService.extractAdminRole(token);
+
+            // --- SPIE DI DEBUG ---
+            System.out.println("=== JWT FILTER DEBUG ===");
+            System.out.println("Rotta chiamata: " + request.getRequestURI());
+            System.out.println("Email estratta: " + email);
+            System.out.println("Ruolo estratto: " + role);
+            System.out.println("AdminRole estratto: " + adminRole);
+
+            var authorities = new ArrayList<SimpleGrantedAuthority>();
+
+            // Logica corazzata: se c'è l'adminRole usa quello ed ignora il role base
+            if (adminRole != null && !adminRole.trim().isEmpty()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + adminRole));
+                System.out.println("-> Autorità assegnata: ROLE_" + adminRole);
+            } else if (role != null && !role.trim().isEmpty()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+                System.out.println("-> Autorità assegnata: ROLE_" + role);
+            } else {
+                System.out.println("-> NESSUNA AUTORITA' TROVATA!");
+            }
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(email, null, authorities);
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("========================");
+
+        } catch (Exception e) {
+            System.out.println("!!! Errore nel parsing del JWT !!! -> " + e.getMessage());
         }
-
-        String email = jwtService.extractEmail(token);
-        String role = jwtService.extractRole(token);
-        String adminRole = jwtService.extractAdminRole(token);
-
-        var authorities = new java.util.ArrayList<SimpleGrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-
-        if (adminRole != null) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + adminRole));
-        }
-
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(email, null, authorities);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }
