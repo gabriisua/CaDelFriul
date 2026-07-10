@@ -136,10 +136,13 @@ public class AdminProductService {
     }
 
     private ProductResponse toResponse(Product product) {
-        List<UUID> imageIds = productImageRepository.findByProductId(product.getId())
+        // Tipizziamo come String invece che UUID
+        List<String> imageIds = productImageRepository.findByProductId(product.getId())
                 .stream()
-                .map(ProductImage::getId)
+                // ATTENZIONE QUI: Prendi il NOME FILE (verifica come si chiama il getter nella tua entità)
+                .map(ProductImage::getFileName)
                 .toList();
+
         return new ProductResponse(product, imageIds);
     }
 }

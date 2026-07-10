@@ -17,9 +17,12 @@ public class ProductResponse {
     private final UUID categoryId;
     private final String categoryName;
     private final Map<String, String> attributes;
-    private final List<UUID> imageIds;
 
-    public ProductResponse(Product product, List<UUID> imageIds) {
+    // 1. Cambiato da UUID a String per contenere i nomi completi dei file
+    private final List<String> imageIds;
+
+    // 2. Aggiornato il parametro del costruttore in List<String>
+    public ProductResponse(Product product, List<String> imageIds) {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
@@ -41,5 +44,7 @@ public class ProductResponse {
     public UUID getCategoryId() { return categoryId; }
     public String getCategoryName() { return categoryName; }
     public Map<String, String> getAttributes() { return attributes; }
-    public List<UUID> getImageIds() { return imageIds; }
+
+    // 3. Aggiunto il getter per far serializzare il campo nel JSON
+    public List<String> getImageIds() { return imageIds; }
 }

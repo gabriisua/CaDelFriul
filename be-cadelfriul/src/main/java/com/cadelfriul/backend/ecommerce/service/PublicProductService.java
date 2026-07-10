@@ -31,7 +31,14 @@ public class PublicProductService {
     }
 
     public List<ProductResponse> getAvailableProducts(UUID categoryId, String search, BigDecimal minPrice, BigDecimal maxPrice) {
-        List<Product> products = productRepository.findAvailableProducts(categoryId, search, minPrice, maxPrice);
+
+        // TRUCCO ANTI-BUG: Se la ricerca è null, usiamo una stringa vuota.
+        // Questo impedisce a PostgreSQL di castare il parametro come 'bytea'
+        String safeSearch = (search == null) ? "" : search;
+
+        // Usiamo safeSearch al posto di search
+        List<Product> products = productRepository.findAvailableProducts(categoryId, safeSearch, minPrice, maxPrice);
+
         return products.stream()
                 .map(this::toResponse)
                 .toList();
@@ -56,10 +63,13 @@ public class PublicProductService {
     }
 
     private ProductResponse toResponse(Product product) {
-        List<UUID> imageIds = productImageRepository.findByProductId(product.getId())
+        // Tipizziamo come String invece che UUID
+        List<String> imageIds = productImageRepository.findByProductId(product.getId())
                 .stream()
-                .map(ProductImage::getId)
+                // ATTENZIONE QUI: Prendi il NOME FILE (verifica come si chiama il getter nella tua entità)
+                .map(ProductImage::getFileName)
                 .toList();
+
         return new ProductResponse(product, imageIds);
     }
 }
