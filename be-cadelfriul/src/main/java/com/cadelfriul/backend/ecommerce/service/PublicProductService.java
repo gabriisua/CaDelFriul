@@ -1,12 +1,12 @@
-package com.cadelfriul.backend.core.ecommerce.service;
+package com.cadelfriul.backend.ecommerce.service;
 
-import com.cadelfriul.backend.core.ecommerce.dto.ProductCategoryResponse;
-import com.cadelfriul.backend.core.ecommerce.dto.ProductResponse;
-import com.cadelfriul.backend.core.ecommerce.entity.Product;
-import com.cadelfriul.backend.core.ecommerce.entity.ProductImage;
-import com.cadelfriul.backend.core.ecommerce.repository.ProductCategoryRepository;
-import com.cadelfriul.backend.core.ecommerce.repository.ProductImageRepository;
-import com.cadelfriul.backend.core.ecommerce.repository.ProductRepository;
+import com.cadelfriul.backend.ecommerce.dto.ProductCategoryResponse;
+import com.cadelfriul.backend.ecommerce.dto.ProductResponse;
+import com.cadelfriul.backend.ecommerce.entity.Product;
+import com.cadelfriul.backend.ecommerce.entity.ProductImage;
+import com.cadelfriul.backend.ecommerce.repository.ProductCategoryRepository;
+import com.cadelfriul.backend.ecommerce.repository.ProductImageRepository;
+import com.cadelfriul.backend.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

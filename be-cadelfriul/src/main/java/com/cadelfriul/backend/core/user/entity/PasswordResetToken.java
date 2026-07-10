@@ -1,8 +1,7 @@
-package com.cadelfriul.backend.core.auth.entity;
+package com.cadelfriul.backend.core.user.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "password_reset_tokens")

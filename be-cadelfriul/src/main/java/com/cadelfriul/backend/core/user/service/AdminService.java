@@ -1,13 +1,13 @@
-package com.cadelfriul.backend.core.auth.service;
+package com.cadelfriul.backend.core.user.service;
 
-import com.cadelfriul.backend.core.auth.dto.AdminCreateRequest;
-import com.cadelfriul.backend.core.auth.dto.AdminLogResponse;
-import com.cadelfriul.backend.core.auth.dto.AdminResponse;
-import com.cadelfriul.backend.core.auth.dto.AdminUpdateRequest;
-import com.cadelfriul.backend.core.auth.entity.Admin;
-import com.cadelfriul.backend.core.auth.entity.AdminLog;
-import com.cadelfriul.backend.core.auth.repository.AdminLogRepository;
-import com.cadelfriul.backend.core.auth.repository.AdminRepository;
+import com.cadelfriul.backend.core.user.dto.AdminCreateRequest;
+import com.cadelfriul.backend.core.user.dto.AdminLogResponse;
+import com.cadelfriul.backend.core.user.dto.AdminResponse;
+import com.cadelfriul.backend.core.user.dto.AdminUpdateRequest;
+import com.cadelfriul.backend.core.user.entity.Admin;
+import com.cadelfriul.backend.core.user.entity.AdminLog;
+import com.cadelfriul.backend.core.user.repository.AdminLogRepository;
+import com.cadelfriul.backend.core.user.repository.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,10 +1,10 @@
-package com.cadelfriul.backend.core.auth.controller;
+package com.cadelfriul.backend.core.user.controller;
 
-import com.cadelfriul.backend.core.auth.dto.AddressRequest;
-import com.cadelfriul.backend.core.auth.dto.AddressResponse;
-import com.cadelfriul.backend.core.auth.entity.Customer;
-import com.cadelfriul.backend.core.auth.repository.CustomerRepository;
-import com.cadelfriul.backend.core.auth.service.AddressService;
+import com.cadelfriul.backend.core.user.dto.AddressRequest;
+import com.cadelfriul.backend.core.user.dto.AddressResponse;
+import com.cadelfriul.backend.core.user.entity.Customer;
+import com.cadelfriul.backend.core.user.repository.CustomerRepository;
+import com.cadelfriul.backend.core.user.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

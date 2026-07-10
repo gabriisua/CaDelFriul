@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.ecommerce.dto;
+package com.cadelfriul.backend.ecommerce.dto;
 
-import com.cadelfriul.backend.core.ecommerce.entity.ProductCategory;
+import com.cadelfriul.backend.ecommerce.entity.ProductCategory;
 import java.util.UUID;
 
 public class ProductCategoryResponse {

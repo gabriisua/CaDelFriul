@@ -1,10 +1,10 @@
-package com.cadelfriul.backend.core.auth.controller;
+package com.cadelfriul.backend.core.user.controller;
 
-import com.cadelfriul.backend.core.auth.dto.AdminCreateRequest;
-import com.cadelfriul.backend.core.auth.dto.AdminLogResponse;
-import com.cadelfriul.backend.core.auth.dto.AdminResponse;
-import com.cadelfriul.backend.core.auth.dto.AdminUpdateRequest;
-import com.cadelfriul.backend.core.auth.service.AdminService;
+import com.cadelfriul.backend.core.user.dto.AdminCreateRequest;
+import com.cadelfriul.backend.core.user.dto.AdminLogResponse;
+import com.cadelfriul.backend.core.user.dto.AdminResponse;
+import com.cadelfriul.backend.core.user.dto.AdminUpdateRequest;
+import com.cadelfriul.backend.core.user.service.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

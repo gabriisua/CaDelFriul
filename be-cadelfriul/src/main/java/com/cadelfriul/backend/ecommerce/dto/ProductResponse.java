@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.ecommerce.dto;
+package com.cadelfriul.backend.ecommerce.dto;
 
-import com.cadelfriul.backend.core.ecommerce.entity.Product;
+import com.cadelfriul.backend.ecommerce.entity.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;

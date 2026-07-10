@@ -1,15 +1,15 @@
-package com.cadelfriul.backend.core.auth.service;
+package com.cadelfriul.backend.core.user.service;
 
-import com.cadelfriul.backend.core.auth.dto.AddressRequest;
-import com.cadelfriul.backend.core.auth.dto.CustomerCreateRequest;
-import com.cadelfriul.backend.core.auth.dto.CustomerLogResponse;
-import com.cadelfriul.backend.core.auth.dto.CustomerResponse;
-import com.cadelfriul.backend.core.auth.dto.CustomerUpdateRequest;
-import com.cadelfriul.backend.core.auth.entity.Address;
-import com.cadelfriul.backend.core.auth.entity.Customer;
-import com.cadelfriul.backend.core.auth.entity.CustomerLog;
-import com.cadelfriul.backend.core.auth.repository.CustomerLogRepository;
-import com.cadelfriul.backend.core.auth.repository.CustomerRepository;
+import com.cadelfriul.backend.core.user.dto.AddressRequest;
+import com.cadelfriul.backend.core.user.dto.CustomerCreateRequest;
+import com.cadelfriul.backend.core.user.dto.CustomerLogResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerUpdateRequest;
+import com.cadelfriul.backend.core.user.entity.Address;
+import com.cadelfriul.backend.core.user.entity.Customer;
+import com.cadelfriul.backend.core.user.entity.CustomerLog;
+import com.cadelfriul.backend.core.user.repository.CustomerLogRepository;
+import com.cadelfriul.backend.core.user.repository.CustomerRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

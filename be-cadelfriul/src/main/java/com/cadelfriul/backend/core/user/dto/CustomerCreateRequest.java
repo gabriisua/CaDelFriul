@@ -1,4 +1,4 @@
-package com.cadelfriul.backend.core.auth.dto;
+package com.cadelfriul.backend.core.user.dto;
 
 public class CustomerCreateRequest {
 

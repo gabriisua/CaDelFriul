@@ -1,11 +1,10 @@
-package com.cadelfriul.backend.core.ecommerce.controller;
+package com.cadelfriul.backend.ecommerce.controller;
 
-import com.cadelfriul.backend.core.ecommerce.dto.ProductCategoryRequest;
-import com.cadelfriul.backend.core.ecommerce.dto.ProductCategoryResponse;
-import com.cadelfriul.backend.core.ecommerce.dto.ProductRequest;
-import com.cadelfriul.backend.core.ecommerce.dto.ProductResponse;
-import com.cadelfriul.backend.core.ecommerce.entity.ProductImage;
-import com.cadelfriul.backend.core.ecommerce.service.AdminProductService;
+import com.cadelfriul.backend.ecommerce.dto.ProductCategoryRequest;
+import com.cadelfriul.backend.ecommerce.dto.ProductCategoryResponse;
+import com.cadelfriul.backend.ecommerce.dto.ProductRequest;
+import com.cadelfriul.backend.ecommerce.dto.ProductResponse;
+import com.cadelfriul.backend.ecommerce.service.AdminProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

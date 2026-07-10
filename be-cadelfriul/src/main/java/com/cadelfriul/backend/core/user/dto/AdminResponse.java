@@ -1,7 +1,7 @@
-package com.cadelfriul.backend.core.auth.dto;
+package com.cadelfriul.backend.core.user.dto;
 
-import com.cadelfriul.backend.core.auth.entity.Admin;
-import com.cadelfriul.backend.core.auth.entity.AdminRole;
+import com.cadelfriul.backend.core.user.entity.Admin;
+import com.cadelfriul.backend.core.user.entity.AdminRole;
 import java.util.UUID;
 
 public class AdminResponse {

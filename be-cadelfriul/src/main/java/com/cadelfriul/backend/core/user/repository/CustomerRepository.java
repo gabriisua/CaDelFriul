@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.auth.repository;
+package com.cadelfriul.backend.core.user.repository;
 
-import com.cadelfriul.backend.core.auth.entity.Customer;
+import com.cadelfriul.backend.core.user.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 

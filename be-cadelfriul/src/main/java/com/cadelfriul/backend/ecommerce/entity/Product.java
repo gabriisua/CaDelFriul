@@ -1,4 +1,4 @@
-package com.cadelfriul.backend.core.ecommerce.entity;
+package com.cadelfriul.backend.ecommerce.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

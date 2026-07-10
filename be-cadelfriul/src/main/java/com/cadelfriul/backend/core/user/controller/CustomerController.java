@@ -1,11 +1,11 @@
-package com.cadelfriul.backend.core.auth.controller;
+package com.cadelfriul.backend.core.user.controller;
 
-import com.cadelfriul.backend.core.auth.dto.CustomerLogResponse;
-import com.cadelfriul.backend.core.auth.dto.CustomerResponse;
-import com.cadelfriul.backend.core.auth.dto.CustomerUpdateRequest;
-import com.cadelfriul.backend.core.auth.entity.Customer;
-import com.cadelfriul.backend.core.auth.repository.CustomerRepository;
-import com.cadelfriul.backend.core.auth.service.CustomerService;
+import com.cadelfriul.backend.core.user.dto.CustomerLogResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerUpdateRequest;
+import com.cadelfriul.backend.core.user.entity.Customer;
+import com.cadelfriul.backend.core.user.repository.CustomerRepository;
+import com.cadelfriul.backend.core.user.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

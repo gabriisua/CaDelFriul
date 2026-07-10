@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.ecommerce.repository;
+package com.cadelfriul.backend.ecommerce.repository;
 
-import com.cadelfriul.backend.core.ecommerce.entity.ProductImage;
+import com.cadelfriul.backend.ecommerce.entity.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

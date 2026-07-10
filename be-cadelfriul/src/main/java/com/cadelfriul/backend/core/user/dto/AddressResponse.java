@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.auth.dto;
+package com.cadelfriul.backend.core.user.dto;
 
-import com.cadelfriul.backend.core.auth.entity.Address;
+import com.cadelfriul.backend.core.user.entity.Address;
 import java.util.UUID;
 
 public class AddressResponse {

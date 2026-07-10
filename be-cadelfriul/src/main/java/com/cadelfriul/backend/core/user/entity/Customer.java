@@ -1,4 +1,4 @@
-package com.cadelfriul.backend.core.auth.entity;
+package com.cadelfriul.backend.core.user.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

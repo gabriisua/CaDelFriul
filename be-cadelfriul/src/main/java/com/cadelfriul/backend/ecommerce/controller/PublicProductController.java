@@ -1,11 +1,14 @@
-package com.cadelfriul.backend.core.ecommerce.controller;
+package com.cadelfriul.backend.ecommerce.controller;
 
-import com.cadelfriul.backend.core.ecommerce.dto.ProductCategoryResponse;
-import com.cadelfriul.backend.core.ecommerce.dto.ProductResponse;
-import com.cadelfriul.backend.core.ecommerce.entity.ProductImage;
-import com.cadelfriul.backend.core.ecommerce.service.PublicProductService;
+import com.cadelfriul.backend.ecommerce.dto.ProductCategoryResponse;
+import com.cadelfriul.backend.ecommerce.dto.ProductResponse;
+import com.cadelfriul.backend.ecommerce.service.PublicProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +30,10 @@ import java.util.UUID;
 public class PublicProductController {
 
     private final PublicProductService publicProductService;
+
+    // Aggiungiamo la lettura della cartella esattamente come nel Service
+    @Value("${app.storage.upload-dir:uploads/products}")
+    private String uploadDir;
 
     public PublicProductController(PublicProductService publicProductService) {
         this.publicProductService = publicProductService;
@@ -51,15 +61,32 @@ public class PublicProductController {
         return ResponseEntity.ok(publicProductService.getAllCategories());
     }
 
-    @GetMapping("/images/{imageId}")
-    @Operation(summary = "Get product image", description = "Serve a product image by its ID")
-    public ResponseEntity<byte[]> getImage(@PathVariable UUID imageId) {
-        ProductImage image = publicProductService.getImage(imageId);
-        MediaType mediaType = image.getContentType() != null
-                ? MediaType.parseMediaType(image.getContentType())
-                : MediaType.APPLICATION_OCTET_STREAM;
-        return ResponseEntity.ok()
-                .contentType(mediaType)
-                .body(image.getImageData());
+    // --- ENDPOINT IMMAGINE AGGIORNATO ---
+    // Il ":.+" serve a dire a Spring di non tagliare l'estensione del file (es. .jpg o .png)
+    @GetMapping("/images/{filename:.+}")
+    @Operation(summary = "Get product image", description = "Serve a product image by its filename")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        try {
+            // 1. Cerca il file nella cartella su disco
+            Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            // 2. Se il file esiste, lo spara al browser
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = Files.probeContentType(filePath);
+                if (contentType == null) {
+                    contentType = "application/octet-stream"; // Fallback generico
+                }
+
+                return ResponseEntity.ok()
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build(); // 404 Se l'immagine non c'è
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build(); // 500 in caso di errore di lettura
+        }
     }
 }

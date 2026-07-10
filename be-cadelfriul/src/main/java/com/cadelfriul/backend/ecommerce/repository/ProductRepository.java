@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.ecommerce.repository;
+package com.cadelfriul.backend.ecommerce.repository;
 
-import com.cadelfriul.backend.core.ecommerce.entity.Product;
+import com.cadelfriul.backend.ecommerce.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

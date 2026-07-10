@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.auth.dto;
+package com.cadelfriul.backend.core.user.dto;
 
-import com.cadelfriul.backend.core.auth.entity.AdminRole;
+import com.cadelfriul.backend.core.user.entity.AdminRole;
 
 public class AdminCreateRequest {
 

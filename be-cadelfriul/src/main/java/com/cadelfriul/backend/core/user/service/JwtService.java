@@ -1,4 +1,4 @@
-package com.cadelfriul.backend.core.auth.service;
+package com.cadelfriul.backend.core.user.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

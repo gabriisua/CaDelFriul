@@ -1,14 +1,14 @@
-package com.cadelfriul.backend.core.auth.controller;
+package com.cadelfriul.backend.core.user.controller;
 
-import com.cadelfriul.backend.core.auth.dto.AuthMeResponse;
-import com.cadelfriul.backend.core.auth.dto.CustomerCreateRequest;
-import com.cadelfriul.backend.core.auth.dto.CustomerResponse;
-import com.cadelfriul.backend.core.auth.dto.LoginRequest;
-import com.cadelfriul.backend.core.auth.dto.LoginResponse;
-import com.cadelfriul.backend.core.auth.dto.PasswordResetConfirm;
-import com.cadelfriul.backend.core.auth.dto.PasswordResetRequest;
-import com.cadelfriul.backend.core.auth.service.AuthenticationService;
-import com.cadelfriul.backend.core.auth.service.CustomerService;
+import com.cadelfriul.backend.core.user.dto.AuthMeResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerCreateRequest;
+import com.cadelfriul.backend.core.user.dto.CustomerResponse;
+import com.cadelfriul.backend.core.user.dto.LoginRequest;
+import com.cadelfriul.backend.core.user.dto.LoginResponse;
+import com.cadelfriul.backend.core.user.dto.PasswordResetConfirm;
+import com.cadelfriul.backend.core.user.dto.PasswordResetRequest;
+import com.cadelfriul.backend.core.user.service.AuthenticationService;
+import com.cadelfriul.backend.core.user.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

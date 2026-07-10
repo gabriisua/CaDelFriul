@@ -1,6 +1,6 @@
 package com.cadelfriul.backend.core.config;
 
-import com.cadelfriul.backend.core.auth.service.JwtService;
+import com.cadelfriul.backend.core.user.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

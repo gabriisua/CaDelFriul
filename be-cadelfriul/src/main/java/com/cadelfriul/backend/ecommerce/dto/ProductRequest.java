@@ -1,4 +1,4 @@
-package com.cadelfriul.backend.core.ecommerce.dto;
+package com.cadelfriul.backend.ecommerce.dto;
 
 import java.math.BigDecimal;
 import java.util.Map;

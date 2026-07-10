@@ -1,6 +1,6 @@
-package com.cadelfriul.backend.core.auth.dto;
+package com.cadelfriul.backend.core.user.dto;
 
-import com.cadelfriul.backend.core.auth.entity.AdminLog;
+import com.cadelfriul.backend.core.user.entity.AdminLog;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
