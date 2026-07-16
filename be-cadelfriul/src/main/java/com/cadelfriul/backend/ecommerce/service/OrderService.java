@@ -53,6 +53,15 @@ public class OrderService {
         order.setCustomer(customer);
         order.setShippingAddress(shippingAddress);
 
+        Address billingAddress;
+        if (request.getBillingAddressId() != null) {
+            billingAddress = addressRepository.findByIdAndCustomerId(request.getBillingAddressId(), customerId)
+                    .orElseThrow(() -> new RuntimeException("Address not found with id: " + request.getBillingAddressId() + " for customer: " + customerId));
+        } else {
+            billingAddress = shippingAddress;
+        }
+        order.setBillingAddress(billingAddress);
+
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (OrderItemRequest itemRequest : request.getItems()) {
