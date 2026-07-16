@@ -30,6 +30,12 @@ public class AdminOrderController {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get order by ID", description = "Get detailed information about a specific order")
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable UUID id) {
+        return ResponseEntity.ok(orderService.getOrderById(id));
+    }
+
     @PutMapping("/{id}/status")
     @Operation(summary = "Update order status", description = "Update the status of an order")
     public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable UUID id,
