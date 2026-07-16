@@ -1,5 +1,6 @@
 package com.cadelfriul.backend.ecommerce.dto;
 
+import com.cadelfriul.backend.core.user.dto.AddressResponse;
 import com.cadelfriul.backend.ecommerce.entity.Order;
 import com.cadelfriul.backend.ecommerce.entity.OrderStatus;
 import java.math.BigDecimal;
@@ -12,7 +13,8 @@ public class OrderResponse {
     private final UUID id;
     private final UUID customerId;
     private final String customerEmail;
-    private final UUID shippingAddressId;
+    private final AddressResponse shippingAddress;
+    private final AddressResponse billingAddress;
     private final BigDecimal totalAmount;
     private final OrderStatus status;
     private final LocalDateTime createdAt;
@@ -22,7 +24,10 @@ public class OrderResponse {
         this.id = order.getId();
         this.customerId = order.getCustomer().getId();
         this.customerEmail = order.getCustomer().getEmail();
-        this.shippingAddressId = order.getShippingAddress().getId();
+        this.shippingAddress = order.getShippingAddress() != null
+                ? new AddressResponse(order.getShippingAddress()) : null;
+        this.billingAddress = order.getBillingAddress() != null
+                ? new AddressResponse(order.getBillingAddress()) : null;
         this.totalAmount = order.getTotalAmount();
         this.status = order.getStatus();
         this.createdAt = order.getCreatedAt();
@@ -32,7 +37,8 @@ public class OrderResponse {
     public UUID getId() { return id; }
     public UUID getCustomerId() { return customerId; }
     public String getCustomerEmail() { return customerEmail; }
-    public UUID getShippingAddressId() { return shippingAddressId; }
+    public AddressResponse getShippingAddress() { return shippingAddress; }
+    public AddressResponse getBillingAddress() { return billingAddress; }
     public BigDecimal getTotalAmount() { return totalAmount; }
     public OrderStatus getStatus() { return status; }
     public LocalDateTime getCreatedAt() { return createdAt; }

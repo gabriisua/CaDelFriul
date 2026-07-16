@@ -25,6 +25,10 @@ public class Order {
     @JoinColumn(name = "shipping_address_id", nullable = false)
     private Address shippingAddress;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "billing_address_id")
+    private Address billingAddress;
+
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
@@ -60,6 +64,9 @@ public class Order {
 
     public Address getShippingAddress() { return shippingAddress; }
     public void setShippingAddress(Address shippingAddress) { this.shippingAddress = shippingAddress; }
+
+    public Address getBillingAddress() { return billingAddress; }
+    public void setBillingAddress(Address billingAddress) { this.billingAddress = billingAddress; }
 
     public BigDecimal getTotalAmount() { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }

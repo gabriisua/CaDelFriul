@@ -1,5 +1,6 @@
 package com.cadelfriul.backend.ecommerce.controller;
 
+import com.cadelfriul.backend.core.user.dto.AddressResponse;
 import com.cadelfriul.backend.ecommerce.dto.OrderItemResponse;
 import com.cadelfriul.backend.ecommerce.dto.OrderResponse;
 import com.cadelfriul.backend.ecommerce.entity.Order;
@@ -68,7 +69,11 @@ class AdminOrderControllerTest {
         assertEquals("Montepulciano", response.getItems().get(1).getProductName());
         assertEquals(orderId, response.getId());
         assertEquals(customerId, response.getCustomerId());
-        assertEquals(addressId, response.getShippingAddressId());
+
+        // Verify structured shipping address instead of UUID
+        assertNotNull(response.getShippingAddress(), "shipping address should be an AddressResponse");
+        assertInstanceOf(AddressResponse.class, response.getShippingAddress());
+        assertEquals(addressId, response.getShippingAddress().getId());
     }
 
     @Test
@@ -97,6 +102,50 @@ class AdminOrderControllerTest {
         } catch (NoSuchFieldException e) {
             fail("Order entity should have an 'items' field");
         }
+    }
+
+    @Test
+    void orderResponse_shouldHandleNullBillingAddress() {
+        UUID orderId = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
+        UUID addressId = UUID.randomUUID();
+
+        Order order = createOrder(orderId, customerId, addressId);
+        // billingAddress is NOT set — should remain null
+
+        OrderResponse response = new OrderResponse(order, List.of());
+
+        assertNull(response.getBillingAddress(), "billingAddress should be null when not set on Order");
+    }
+
+    @Test
+    void orderResponse_shouldContainStructuredBillingAddress() {
+        UUID orderId = UUID.randomUUID();
+        UUID customerId = UUID.randomUUID();
+        UUID shippingAddressId = UUID.randomUUID();
+        UUID billingAddressId = UUID.randomUUID();
+
+        Order order = createOrder(orderId, customerId, shippingAddressId);
+
+        Address billingAddress = new Address();
+        setField(billingAddress, "id", billingAddressId);
+        billingAddress.setStreet("Via Roma 5");
+        billingAddress.setCity("Udine");
+        billingAddress.setZipCode("33100");
+        billingAddress.setProvince("UD");
+        billingAddress.setCountry("IT");
+        order.setBillingAddress(billingAddress);
+
+        OrderResponse response = new OrderResponse(order, List.of());
+
+        assertNotNull(response.getBillingAddress(), "billingAddress should not be null");
+        assertInstanceOf(AddressResponse.class, response.getBillingAddress());
+        assertEquals(billingAddressId, response.getBillingAddress().getId());
+        assertEquals("Via Roma 5", response.getBillingAddress().getStreet());
+        assertEquals("Udine", response.getBillingAddress().getCity());
+        assertEquals("33100", response.getBillingAddress().getZipCode());
+        assertEquals("UD", response.getBillingAddress().getProvince());
+        assertEquals("IT", response.getBillingAddress().getCountry());
     }
 
     // --- helpers ---
