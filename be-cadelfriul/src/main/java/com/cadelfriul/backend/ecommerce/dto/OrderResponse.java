@@ -1,6 +1,5 @@
 package com.cadelfriul.backend.ecommerce.dto;
 
-import com.cadelfriul.backend.core.user.dto.AddressResponse;
 import com.cadelfriul.backend.ecommerce.entity.Order;
 import com.cadelfriul.backend.ecommerce.entity.OrderStatus;
 import java.math.BigDecimal;
@@ -9,38 +8,35 @@ import java.util.List;
 import java.util.UUID;
 
 public class OrderResponse {
+    private UUID id;
+    private OrderStatus status;
+    private BigDecimal totalAmount;
+    private BigDecimal subtotal;     // NUOVO
+    private BigDecimal shippingCost; // NUOVO
+    private LocalDateTime createdAt;
+    private List<OrderItemResponse> items;
 
-    private final UUID id;
-    private final UUID customerId;
-    private final String customerEmail;
-    private final AddressResponse shippingAddress;
-    private final AddressResponse billingAddress;
-    private final BigDecimal totalAmount;
-    private final OrderStatus status;
-    private final LocalDateTime createdAt;
-    private final List<OrderItemResponse> items;
+    // Aggiungi anche i dati del cliente e indirizzi se li avevi mappati!
 
     public OrderResponse(Order order, List<OrderItemResponse> items) {
         this.id = order.getId();
-        this.customerId = order.getCustomer().getId();
-        this.customerEmail = order.getCustomer().getEmail();
-        this.shippingAddress = order.getShippingAddress() != null
-                ? new AddressResponse(order.getShippingAddress()) : null;
-        this.billingAddress = order.getBillingAddress() != null
-                ? new AddressResponse(order.getBillingAddress()) : null;
-        this.totalAmount = order.getTotalAmount();
         this.status = order.getStatus();
+        this.totalAmount = order.getTotalAmount();
+        this.shippingCost = order.getShippingCost(); // NUOVO
+
+        // Calcoliamo il subtotale al volo (Totale - Spedizione)
+        this.subtotal = order.getTotalAmount().subtract(order.getShippingCost());
+
         this.createdAt = order.getCreatedAt();
         this.items = items;
     }
 
+    // Getter e Setter
     public UUID getId() { return id; }
-    public UUID getCustomerId() { return customerId; }
-    public String getCustomerEmail() { return customerEmail; }
-    public AddressResponse getShippingAddress() { return shippingAddress; }
-    public AddressResponse getBillingAddress() { return billingAddress; }
-    public BigDecimal getTotalAmount() { return totalAmount; }
     public OrderStatus getStatus() { return status; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public BigDecimal getShippingCost() { return shippingCost; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public List<OrderItemResponse> getItems() { return items; }
 }

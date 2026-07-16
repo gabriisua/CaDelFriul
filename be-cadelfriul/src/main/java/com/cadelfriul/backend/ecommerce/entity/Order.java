@@ -32,6 +32,10 @@ public class Order {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
+    // NUOVO: Costo di spedizione dell'ordine
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal shippingCost = BigDecimal.ZERO;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
     private OrderStatus status;
@@ -70,6 +74,9 @@ public class Order {
 
     public BigDecimal getTotalAmount() { return totalAmount; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+
+    public BigDecimal getShippingCost() { return shippingCost; }
+    public void setShippingCost(BigDecimal shippingCost) { this.shippingCost = shippingCost; }
 
     public OrderStatus getStatus() { return status; }
     public void setStatus(OrderStatus status) { this.status = status; }

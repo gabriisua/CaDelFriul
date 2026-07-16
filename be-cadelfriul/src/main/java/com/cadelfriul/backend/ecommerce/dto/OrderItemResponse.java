@@ -5,27 +5,30 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class OrderItemResponse {
+    private UUID id;
+    private UUID productId;
+    private String productName;
+    private int quantity;
+    private BigDecimal priceAtPurchase;
+    private BigDecimal vatRate; // NUOVO
+    private BigDecimal lineTotal;
 
-    private final UUID id;
-    private final UUID productId;
-    private final String productName;
-    private final int quantity;
-    private final BigDecimal priceAtPurchase;
-    private final BigDecimal lineTotal;
-
-    public OrderItemResponse(OrderItem orderItem) {
-        this.id = orderItem.getId();
-        this.productId = orderItem.getProduct().getId();
-        this.productName = orderItem.getProduct().getName();
-        this.quantity = orderItem.getQuantity();
-        this.priceAtPurchase = orderItem.getPriceAtPurchase();
-        this.lineTotal = orderItem.getPriceAtPurchase().multiply(BigDecimal.valueOf(orderItem.getQuantity()));
+    public OrderItemResponse(OrderItem item) {
+        this.id = item.getId();
+        this.productId = item.getProduct().getId();
+        this.productName = item.getProduct().getName();
+        this.quantity = item.getQuantity();
+        this.priceAtPurchase = item.getPriceAtPurchase();
+        this.vatRate = item.getVatRate(); // NUOVO
+        this.lineTotal = item.getPriceAtPurchase().multiply(BigDecimal.valueOf(item.getQuantity()));
     }
 
+    // Aggiungi qui i Getter e Setter
     public UUID getId() { return id; }
     public UUID getProductId() { return productId; }
     public String getProductName() { return productName; }
     public int getQuantity() { return quantity; }
     public BigDecimal getPriceAtPurchase() { return priceAtPurchase; }
+    public BigDecimal getVatRate() { return vatRate; }
     public BigDecimal getLineTotal() { return lineTotal; }
 }

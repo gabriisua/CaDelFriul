@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.UUID;
@@ -34,44 +35,65 @@ public class CustomerController {
         this.customerRepository = customerRepository;
     }
 
-    private void validateOwnership(UUID customerId) {
-        String authenticatedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    /**
+     * @param customerId l'ID del cliente su cui operare
+     * @param allowAdmin se true, permette l'accesso anche agli amministratori
+     */
+    private void validateOwnership(UUID customerId, boolean allowAdmin) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedEmail = authentication.getName();
+
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found with id: " + customerId));
+
+        // 1. Se l'azione è consentita agli admin, controlliamo se l'utente è un admin (o super admin)
+        if (allowAdmin) {
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().toUpperCase().contains("ADMIN"));
+            if (isAdmin) {
+                return; // È un admin/super admin e l'azione lo consente: passa!
+            }
+        }
+
+        // 2. Se NON è un admin (oppure l'azione vieta l'uso agli admin, come l'Update), controlliamo che sia il proprietario
         if (!customer.getEmail().equals(authenticatedEmail)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                    "Access Denied: You cannot modify another user's profile");
+                    "Access Denied: You are not authorized to perform this action on this profile");
         }
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN', 'ROLE_SUPER_ADMIN', 'ADMIN', 'ROLE_ADMIN')")
     public ResponseEntity<List<CustomerResponse>> findAll() {
         return ResponseEntity.ok(customerService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponse> findById(@PathVariable UUID id) {
-        validateOwnership(id);
+        // Lettura: Permessa al proprietario E agli Admin
+        validateOwnership(id, true);
         return ResponseEntity.ok(customerService.findById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CustomerResponse> update(@PathVariable UUID id, @RequestBody CustomerUpdateRequest request) {
-        validateOwnership(id);
+        // Modifica: Permessa SOLO al proprietario. Gli admin vengono bloccati (allowAdmin = false)
+        validateOwnership(id, false);
         return ResponseEntity.ok(customerService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        validateOwnership(id);
+        // Eliminazione: Permessa al proprietario E agli Admin
+        validateOwnership(id, true);
         customerService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/logs")
     public ResponseEntity<List<CustomerLogResponse>> findLogs(@PathVariable UUID id) {
-        validateOwnership(id);
+        // Lettura Log: Permessa al proprietario E agli Admin
+        validateOwnership(id, true);
         return ResponseEntity.ok(customerService.findLogsByCustomerId(id));
     }
 }

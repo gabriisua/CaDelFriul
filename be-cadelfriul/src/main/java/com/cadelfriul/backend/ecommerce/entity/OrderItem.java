@@ -26,6 +26,10 @@ public class OrderItem {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal priceAtPurchase;
 
+    // NUOVO: Fotografia dell'IVA applicata al momento dell'acquisto
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal vatRate;
+
     public OrderItem() {}
 
     public UUID getId() { return id; }
@@ -41,4 +45,7 @@ public class OrderItem {
 
     public BigDecimal getPriceAtPurchase() { return priceAtPurchase; }
     public void setPriceAtPurchase(BigDecimal priceAtPurchase) { this.priceAtPurchase = priceAtPurchase; }
+
+    public BigDecimal getVatRate() { return vatRate; }
+    public void setVatRate(BigDecimal vatRate) { this.vatRate = vatRate; }
 }

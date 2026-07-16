@@ -23,6 +23,10 @@ public class Product {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    // NUOVO: Aliquota IVA attuale del prodotto (es. 22.00, 10.00, 4.00)
+    @Column(nullable = false, precision = 5, scale = 2)
+    private BigDecimal vatRate = new BigDecimal("22.00");
+
     @Column(nullable = false)
     private int stockQuantity;
 
@@ -51,6 +55,9 @@ public class Product {
 
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
+
+    public BigDecimal getVatRate() { return vatRate; }
+    public void setVatRate(BigDecimal vatRate) { this.vatRate = vatRate; }
 
     public int getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(int stockQuantity) { this.stockQuantity = stockQuantity; }
