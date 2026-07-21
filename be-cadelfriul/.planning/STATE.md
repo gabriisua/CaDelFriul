@@ -1,7 +1,7 @@
 # Project State
 
 ## Last activity
-2026-07-21 - Completed quick task 260721-o5n: Implement Room backend - entity, service, controllers, security for hospitality module
+2026-07-21 - Completed quick task 260721-ow2: Refactor File Storage to Use Dynamic Nested Structure
 
 ## Quick Tasks Completed
 
@@ -15,3 +15,4 @@
 | 260716-gdt | Fix Order Management DTO and Service Mapping (EAGER fetch + tests) | 2026-07-16 | a205831, 1140fc2 | [260716-gdt-fix-order-management-ensure-get-api-admi](./quick/260716-gdt-fix-order-management-ensure-get-api-admi/) |
 | 260716-grz | Fix Order Management endpoint: return orderItems collection and structured shippingAddress/billingAddress instead of UUID | 2026-07-16 | 22e97e4, 701e727 | [260716-grz-fix-order-management-endpoint-return-ord](./quick/260716-grz-fix-order-management-endpoint-return-ord/) |
 | 260721-o5n | Implement Room backend - entity, service, controllers, security for hospitality module | 2026-07-21 | 106be63 | [260721-o5n-implement-the-backend-logic-for-the-room](./quick/260721-o5n-implement-the-backend-logic-for-the-room/) |
+| 260721-ow2 | Refactor File Storage to Use Dynamic Nested Structure | 2026-07-21 | 1eff120, b9fb24d, 01c53d5 | [260721-ow2-refactor-file-storage-to-use-dynamic-nes](./quick/260721-ow2-refactor-file-storage-to-use-dynamic-nes/) |
