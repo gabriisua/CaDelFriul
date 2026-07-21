@@ -1,13 +1,12 @@
 package com.cadelfriul.backend.ecommerce.controller;
 
+import com.cadelfriul.backend.core.service.FileStorageService;
 import com.cadelfriul.backend.ecommerce.dto.ProductCategoryResponse;
 import com.cadelfriul.backend.ecommerce.dto.ProductResponse;
 import com.cadelfriul.backend.ecommerce.service.PublicProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,13 +28,12 @@ import java.util.UUID;
 public class PublicProductController {
 
     private final PublicProductService publicProductService;
+    private final FileStorageService fileStorageService;
 
-    // Aggiungiamo la lettura della cartella esattamente come nel Service
-    @Value("${app.storage.upload-dir:uploads/products}")
-    private String uploadDir;
-
-    public PublicProductController(PublicProductService publicProductService) {
+    public PublicProductController(PublicProductService publicProductService,
+                                   FileStorageService fileStorageService) {
         this.publicProductService = publicProductService;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping
@@ -61,21 +58,27 @@ public class PublicProductController {
         return ResponseEntity.ok(publicProductService.getAllCategories());
     }
 
-    // --- ENDPOINT IMMAGINE AGGIORNATO ---
-    // Il ":.+" serve a dire a Spring di non tagliare l'estensione del file (es. .jpg o .png)
+    /**
+     * Serve product image. Filename format: {UUID}_{originalFilename}
+     * Extracts the productId prefix from the filename.
+     */
     @GetMapping("/images/{filename:.+}")
     @Operation(summary = "Get product image", description = "Serve a product image by its filename")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {
-            // 1. Cerca il file nella cartella su disco
-            Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
+            // Extract productId from filename format: {UUID}_{originalFilename}
+            UUID productId = extractProductIdFromFilename(filename);
+            if (productId == null) {
+                return ResponseEntity.notFound().build();
+            }
 
-            // 2. Se il file esiste, lo spara al browser
-            if (resource.exists() && resource.isReadable()) {
+            Resource resource = fileStorageService.loadFile("products", productId, filename);
+
+            if (resource != null) {
+                Path filePath = resource.getFile().toPath();
                 String contentType = Files.probeContentType(filePath);
                 if (contentType == null) {
-                    contentType = "application/octet-stream"; // Fallback generico
+                    contentType = "application/octet-stream";
                 }
 
                 return ResponseEntity.ok()
@@ -83,10 +86,25 @@ public class PublicProductController {
                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                         .body(resource);
             } else {
-                return ResponseEntity.notFound().build(); // 404 Se l'immagine non c'è
+                return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build(); // 500 in caso di errore di lettura
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    /**
+     * Extract UUID productId from filename format: {UUID}_{originalFilename}
+     * Returns null if the filename doesn't match the expected pattern.
+     */
+    private UUID extractProductIdFromFilename(String filename) {
+        if (filename == null) return null;
+        int separatorIndex = filename.indexOf('_');
+        if (separatorIndex <= 0) return null;
+        try {
+            return UUID.fromString(filename.substring(0, separatorIndex));
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 }
