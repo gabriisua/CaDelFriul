@@ -46,6 +46,10 @@ public class SecurityConfig {
 
                         // --- ENDPOINT PUBBLICI PRODOTTI ---
                         .requestMatchers("/api/products/**").permitAll()
+
+                        // --- ENDPOINT PUBBLICI STANZE ---
+                        .requestMatchers("/api/rooms/**").permitAll()
+
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // --- TUTTO IL RESTO È PROTETTO (incluso /api/auth/me) ---
