@@ -31,6 +31,11 @@ public class Room {
     @Column(name = "amenity")
     private List<String> amenities = new ArrayList<>();
 
+    @ElementCollection
+    @CollectionTable(name = "room_image_urls", joinColumns = @JoinColumn(name = "room_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls = new ArrayList<>();
+
     @Column(nullable = false)
     private boolean isArchived = false;
 
@@ -52,6 +57,9 @@ public class Room {
 
     public List<String> getAmenities() { return amenities; }
     public void setAmenities(List<String> amenities) { this.amenities = amenities; }
+
+    public List<String> getImageUrls() { return imageUrls; }
+    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
 
     public boolean isArchived() { return isArchived; }
     public void setArchived(boolean archived) { isArchived = archived; }
