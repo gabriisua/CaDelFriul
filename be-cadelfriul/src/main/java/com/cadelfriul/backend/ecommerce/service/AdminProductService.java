@@ -1,5 +1,6 @@
 package com.cadelfriul.backend.ecommerce.service;
 
+import com.cadelfriul.backend.core.service.FileStorageService;
 import com.cadelfriul.backend.ecommerce.dto.ProductCategoryRequest;
 import com.cadelfriul.backend.ecommerce.dto.ProductCategoryResponse;
 import com.cadelfriul.backend.ecommerce.dto.ProductRequest;
@@ -10,14 +11,9 @@ import com.cadelfriul.backend.ecommerce.entity.ProductImage;
 import com.cadelfriul.backend.ecommerce.repository.ProductCategoryRepository;
 import com.cadelfriul.backend.ecommerce.repository.ProductImageRepository;
 import com.cadelfriul.backend.ecommerce.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,17 +24,16 @@ public class AdminProductService {
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final ProductImageRepository productImageRepository;
-
-    // Legge la cartella dal file properties. Se non c'è, usa "uploads/products" di default!
-    @Value("${app.storage.upload-dir:uploads/products}")
-    private String uploadDir;
+    private final FileStorageService fileStorageService;
 
     public AdminProductService(ProductRepository productRepository,
                                ProductCategoryRepository productCategoryRepository,
-                               ProductImageRepository productImageRepository) {
+                               ProductImageRepository productImageRepository,
+                               FileStorageService fileStorageService) {
         this.productRepository = productRepository;
         this.productCategoryRepository = productCategoryRepository;
         this.productImageRepository = productImageRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     public ProductCategoryResponse createCategory(ProductCategoryRequest request) {
@@ -88,37 +83,19 @@ public class AdminProductService {
         productRepository.deleteById(id);
     }
 
-    // --- METODO AGGIORNATO PER IL SALVATAGGIO SU DISCO ---
     public ProductImage addImage(UUID productId, byte[] imageData, String contentType, String fileName) {
-        try {
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-            // 1. Crea la cartella se non esiste
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
+        String imageUrl = fileStorageService.storeFile("products", productId, imageData, contentType, fileName);
 
-            // 2. Genera un nome unico per il file (evita di sovrascrivere immagini con lo stesso nome)
-            String uniqueFilename = UUID.randomUUID().toString() + "_" + fileName;
+        ProductImage image = new ProductImage();
+        image.setProduct(product);
+        image.setFileName(fileName);
+        image.setContentType(contentType);
+        image.setImageUrl(imageUrl);
 
-            // 3. Scrive fisicamente i byte dell'immagine sul disco del tuo computer/server
-            Path filePath = uploadPath.resolve(uniqueFilename);
-            Files.write(filePath, imageData);
-
-            // 4. Salva i metadati e l'URL pubblico nel database
-            ProductImage image = new ProductImage();
-            image.setProduct(product);
-            image.setFileName(uniqueFilename);
-            image.setContentType(contentType);
-            image.setImageUrl("/api/products/images/" + uniqueFilename);
-
-            return productImageRepository.save(image);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Errore durante il salvataggio dell'immagine: " + e.getMessage(), e);
-        }
+        return productImageRepository.save(image);
     }
 
     private void applyProductRequest(Product product, ProductRequest request) {
