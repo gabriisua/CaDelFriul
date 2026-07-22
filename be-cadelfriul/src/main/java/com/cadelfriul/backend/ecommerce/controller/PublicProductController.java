@@ -62,7 +62,7 @@ public class PublicProductController {
      * Serve product image by productId and filename.
      * URL format: /api/products/{productId}/images/{filename}
      */
-    @GetMapping("/{productId}/images/{filename:.+}")
+    @GetMapping("/{productId}/{filename:.+}") // ✅ TOLTO "/images" DA QUI!
     @Operation(summary = "Get product image", description = "Serve a product image by productId and filename")
     public ResponseEntity<Resource> getImage(@PathVariable UUID productId, @PathVariable String filename) {
         try {
