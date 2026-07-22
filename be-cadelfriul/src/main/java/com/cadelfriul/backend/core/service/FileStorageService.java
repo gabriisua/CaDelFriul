@@ -23,7 +23,7 @@ public class FileStorageService {
 
     /**
      * Store a file under {baseDir}/{domain}/{entityId}/{uniqueFilename}.
-     * Returns the relative URL path: /api/{domain}/images/{uniqueFilename}
+     * Returns the relative URL path: /api/{domain}/{entityId}/images/{uniqueFilename}
      */
     public String storeFile(String domain, UUID entityId, byte[] fileData, String contentType, String originalFilename) {
         try {
@@ -36,7 +36,7 @@ public class FileStorageService {
 
             Files.write(filePath, fileData);
 
-            return "/api/" + domain + "/images/" + uniqueFilename;
+            return "/api/" + domain + "/" + entityId + "/images/" + uniqueFilename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
         }

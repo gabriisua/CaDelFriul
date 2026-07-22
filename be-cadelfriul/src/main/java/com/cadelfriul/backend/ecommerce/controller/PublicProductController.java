@@ -59,19 +59,13 @@ public class PublicProductController {
     }
 
     /**
-     * Serve product image. Filename format: {UUID}_{originalFilename}
-     * Extracts the productId prefix from the filename.
+     * Serve product image by productId and filename.
+     * URL format: /api/products/{productId}/images/{filename}
      */
-    @GetMapping("/images/{filename:.+}")
-    @Operation(summary = "Get product image", description = "Serve a product image by its filename")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+    @GetMapping("/{productId}/images/{filename:.+}")
+    @Operation(summary = "Get product image", description = "Serve a product image by productId and filename")
+    public ResponseEntity<Resource> getImage(@PathVariable UUID productId, @PathVariable String filename) {
         try {
-            // Extract productId from filename format: {UUID}_{originalFilename}
-            UUID productId = extractProductIdFromFilename(filename);
-            if (productId == null) {
-                return ResponseEntity.notFound().build();
-            }
-
             Resource resource = fileStorageService.loadFile("products", productId, filename);
 
             if (resource != null) {
@@ -90,21 +84,6 @@ public class PublicProductController {
             }
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    /**
-     * Extract UUID productId from filename format: {UUID}_{originalFilename}
-     * Returns null if the filename doesn't match the expected pattern.
-     */
-    private UUID extractProductIdFromFilename(String filename) {
-        if (filename == null) return null;
-        int separatorIndex = filename.indexOf('_');
-        if (separatorIndex <= 0) return null;
-        try {
-            return UUID.fromString(filename.substring(0, separatorIndex));
-        } catch (IllegalArgumentException e) {
-            return null;
         }
     }
 }

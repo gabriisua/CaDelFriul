@@ -93,8 +93,8 @@ public class RoomService {
         room.getImageUrls().remove(imageUrl);
         roomRepository.save(room);
 
-        // Parse domain/entityId/filename from the imageUrl to delete the file
-        // imageUrl format: /api/rooms/images/{uniqueFilename}
+        // Parse filename from the imageUrl to delete the file
+        // imageUrl format: /api/rooms/{roomId}/images/{uniqueFilename}
         String filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
         fileStorageService.deleteFile("rooms", roomId, filename);
     }

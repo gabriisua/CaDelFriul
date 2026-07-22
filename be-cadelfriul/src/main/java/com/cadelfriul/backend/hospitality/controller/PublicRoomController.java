@@ -42,18 +42,13 @@ public class PublicRoomController {
     }
 
     /**
-     * Serve room image. Filename format: {UUID}_{originalFilename}
-     * Extracts the roomId prefix from the filename.
+     * Serve room image by roomId and filename.
+     * URL format: /api/rooms/{roomId}/images/{filename}
      */
-    @GetMapping("/images/{filename:.+}")
-    @Operation(summary = "Get room image", description = "Serve a room image by its filename")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+    @GetMapping("/{roomId}/images/{filename:.+}")
+    @Operation(summary = "Get room image", description = "Serve a room image by roomId and filename")
+    public ResponseEntity<Resource> getImage(@PathVariable UUID roomId, @PathVariable String filename) {
         try {
-            UUID roomId = extractRoomIdFromFilename(filename);
-            if (roomId == null) {
-                return ResponseEntity.notFound().build();
-            }
-
             Resource resource = fileStorageService.loadFile("rooms", roomId, filename);
 
             if (resource != null) {
@@ -72,17 +67,6 @@ public class PublicRoomController {
             }
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    private UUID extractRoomIdFromFilename(String filename) {
-        if (filename == null) return null;
-        int separatorIndex = filename.indexOf('_');
-        if (separatorIndex <= 0) return null;
-        try {
-            return UUID.fromString(filename.substring(0, separatorIndex));
-        } catch (IllegalArgumentException e) {
-            return null;
         }
     }
 }
