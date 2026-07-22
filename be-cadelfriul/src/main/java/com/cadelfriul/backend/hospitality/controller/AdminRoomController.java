@@ -54,21 +54,36 @@ public class AdminRoomController {
     }
 
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Upload room image", description = "Upload an image file for a room")
-    public ResponseEntity<String> uploadImage(
+    @Operation(summary = "Upload room images", description = "Upload multiple image files for a room")
+    public ResponseEntity<?> uploadImages(
             @PathVariable UUID id,
-            @RequestParam("file") MultipartFile file) throws IOException {
+            @RequestParam("files") List<MultipartFile> files) { // ✅ Ora accetta 'files' come lista!
 
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("File is empty");
+        if (files == null || files.isEmpty()) {
+            return ResponseEntity.badRequest().body("No files provided");
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            return ResponseEntity.badRequest().body("File must be an image");
-        }
+        List<String> uploadedUrls = new java.util.ArrayList<>();
 
-        String imageUrl = roomService.addImage(id, file.getBytes(), contentType, file.getOriginalFilename());
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageUrl);
+        try {
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
+
+                String contentType = file.getContentType();
+                if (contentType == null || !contentType.startsWith("image/")) {
+                    return ResponseEntity.badRequest().body("File " + file.getOriginalFilename() + " is not an image");
+                }
+
+                // Chiamiamo il tuo service per ogni file
+                String imageUrl = roomService.addImage(id, file.getBytes(), contentType, file.getOriginalFilename());
+                uploadedUrls.add(imageUrl);
+            }
+
+            // Restituiamo la lista degli URL caricati
+            return ResponseEntity.status(HttpStatus.CREATED).body(uploadedUrls);
+
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing files");
+        }
     }
 }

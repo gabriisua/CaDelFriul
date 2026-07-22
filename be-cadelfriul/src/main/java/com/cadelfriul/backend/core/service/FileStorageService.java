@@ -36,7 +36,7 @@ public class FileStorageService {
 
             Files.write(filePath, fileData);
 
-            return "/api/" + domain + "/" + entityId + "/images/" + uniqueFilename;
+            return "/api/" + domain + "/" + entityId + "/" + uniqueFilename;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file: " + e.getMessage(), e);
         }
