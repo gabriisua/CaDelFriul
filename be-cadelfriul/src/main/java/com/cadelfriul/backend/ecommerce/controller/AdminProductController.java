@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -77,11 +78,12 @@ public class AdminProductController {
     }
 
     @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Upload image", description = "Upload a product image")
-    public ResponseEntity<Void> uploadImage(@PathVariable UUID id,
-                                            @RequestParam("file") MultipartFile file) throws IOException {
-        adminProductService.addImage(id, file.getBytes(),
-                file.getContentType(), file.getOriginalFilename());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @Operation(summary = "Upload product images", description = "Upload multiple image files for a product")
+    public ResponseEntity<List<String>> uploadImages(
+            @PathVariable UUID id,
+            @RequestParam("files") List<MultipartFile> files) throws IOException {
+
+        List<String> imageUrls = adminProductService.addImages(id, files);
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageUrls);
     }
 }

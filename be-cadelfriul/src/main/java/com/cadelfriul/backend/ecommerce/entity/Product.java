@@ -2,7 +2,9 @@ package com.cadelfriul.backend.ecommerce.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,6 +45,11 @@ public class Product {
     @Column(name = "attr_value", columnDefinition = "TEXT")
     private Map<String, String> attributes = new HashMap<>();
 
+    @ElementCollection
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls = new ArrayList<>();
+
     public Product() {}
 
     public UUID getId() { return id; }
@@ -70,4 +77,7 @@ public class Product {
 
     public Map<String, String> getAttributes() { return attributes; }
     public void setAttributes(Map<String, String> attributes) { this.attributes = attributes; }
+
+    public List<String> getImageUrls() { return imageUrls; }
+    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
 }

@@ -7,13 +7,14 @@ import com.cadelfriul.backend.ecommerce.dto.ProductRequest;
 import com.cadelfriul.backend.ecommerce.dto.ProductResponse;
 import com.cadelfriul.backend.ecommerce.entity.Product;
 import com.cadelfriul.backend.ecommerce.entity.ProductCategory;
-import com.cadelfriul.backend.ecommerce.entity.ProductImage;
 import com.cadelfriul.backend.ecommerce.repository.ProductCategoryRepository;
-import com.cadelfriul.backend.ecommerce.repository.ProductImageRepository;
 import com.cadelfriul.backend.ecommerce.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,16 +24,13 @@ public class AdminProductService {
 
     private final ProductRepository productRepository;
     private final ProductCategoryRepository productCategoryRepository;
-    private final ProductImageRepository productImageRepository;
     private final FileStorageService fileStorageService;
 
     public AdminProductService(ProductRepository productRepository,
                                ProductCategoryRepository productCategoryRepository,
-                               ProductImageRepository productImageRepository,
                                FileStorageService fileStorageService) {
         this.productRepository = productRepository;
         this.productCategoryRepository = productCategoryRepository;
-        this.productImageRepository = productImageRepository;
         this.fileStorageService = fileStorageService;
     }
 
@@ -83,19 +81,31 @@ public class AdminProductService {
         productRepository.deleteById(id);
     }
 
-    public ProductImage addImage(UUID productId, byte[] imageData, String contentType, String fileName) {
+    public List<String> addImages(UUID productId, List<MultipartFile> files) throws IOException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-        String imageUrl = fileStorageService.storeFile("products", productId, imageData, contentType, fileName);
+        List<String> newUrls = new ArrayList<>();
 
-        ProductImage image = new ProductImage();
-        image.setProduct(product);
-        image.setFileName(fileName);
-        image.setContentType(contentType);
-        image.setImageUrl(imageUrl);
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) {
+                continue;
+            }
 
-        return productImageRepository.save(image);
+            String contentType = file.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                continue;
+            }
+
+            String imageUrl = fileStorageService.storeFile("products", productId,
+                    file.getBytes(), contentType, file.getOriginalFilename());
+            newUrls.add(imageUrl);
+        }
+
+        product.getImageUrls().addAll(newUrls);
+        productRepository.save(product);
+
+        return newUrls;
     }
 
     private void applyProductRequest(Product product, ProductRequest request) {
@@ -113,13 +123,7 @@ public class AdminProductService {
     }
 
     private ProductResponse toResponse(Product product) {
-        // Tipizziamo come String invece che UUID
-        List<String> imageIds = productImageRepository.findByProductId(product.getId())
-                .stream()
-                // ATTENZIONE QUI: Prendi il NOME FILE (verifica come si chiama il getter nella tua entità)
-                .map(ProductImage::getFileName)
-                .toList();
-
-        return new ProductResponse(product, imageIds);
+        List<String> imageUrls = product.getImageUrls() != null ? product.getImageUrls() : new ArrayList<>();
+        return new ProductResponse(product, imageUrls);
     }
 }
