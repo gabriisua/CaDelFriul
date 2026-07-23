@@ -50,6 +50,9 @@ public class SecurityConfig {
                         // --- ENDPOINT PUBBLICI STANZE ---
                         .requestMatchers("/api/rooms/**").permitAll()
 
+                        // --- ENDPOINT PUBBLICI PRENOTAZIONI ---
+                        .requestMatchers("/api/bookings/**").permitAll()
+
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // --- TUTTO IL RESTO È PROTETTO (incluso /api/auth/me) ---
