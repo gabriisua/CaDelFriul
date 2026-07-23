@@ -20,7 +20,7 @@ Implementation
 
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
-| 260723-001 | Room Booking backend (entity, repository, DTOs, service, controllers) | 2026-07-23 | — | [260723-001-room-booking-backend](./quick/260723-001-room-booking-backend/) |
+| 260723-001 | Room Booking backend (entity, repository, DTOs, service, controllers) | 2026-07-23 | 5cd6d9a | [260723-001-room-booking-backend](./quick/260723-001-room-booking-backend/) |
 
 ### Blockers/Concerns
 
