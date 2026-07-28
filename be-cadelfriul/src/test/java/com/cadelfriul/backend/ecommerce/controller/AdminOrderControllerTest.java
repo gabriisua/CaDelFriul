@@ -1,6 +1,6 @@
 package com.cadelfriul.backend.ecommerce.controller;
 
-import com.cadelfriul.backend.core.user.dto.AddressResponse;
+import com.cadelfriul.backend.ecommerce.dto.AddressDTO;
 import com.cadelfriul.backend.ecommerce.dto.OrderItemResponse;
 import com.cadelfriul.backend.ecommerce.dto.OrderResponse;
 import com.cadelfriul.backend.ecommerce.entity.Order;
@@ -17,11 +17,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Unit tests verifying that OrderResponse and OrderItemResponse correctly
- * map and return order items. These tests do not require a Spring context
- * or database — they validate the DTO contract in isolation.
- */
 class AdminOrderControllerTest {
 
     @Test
@@ -57,7 +52,6 @@ class AdminOrderControllerTest {
 
         Order order = createOrder(orderId, customerId, addressId);
 
-        // Build two items
         OrderItemResponse item1 = buildItemResponse("Prosecco DOC", 2, new BigDecimal("12.50"));
         OrderItemResponse item2 = buildItemResponse("Montepulciano", 1, new BigDecimal("18.00"));
 
@@ -68,11 +62,10 @@ class AdminOrderControllerTest {
         assertEquals("Prosecco DOC", response.getItems().get(0).getProductName());
         assertEquals("Montepulciano", response.getItems().get(1).getProductName());
         assertEquals(orderId, response.getId());
-        assertEquals(customerId, response.getCustomerId());
+        assertEquals(customerId, response.getCustomer().getId());
 
-        // Verify structured shipping address instead of UUID
-        assertNotNull(response.getShippingAddress(), "shipping address should be an AddressResponse");
-        assertInstanceOf(AddressResponse.class, response.getShippingAddress());
+        assertNotNull(response.getShippingAddress(), "shipping address should be an AddressDTO");
+        assertInstanceOf(AddressDTO.class, response.getShippingAddress());
         assertEquals(addressId, response.getShippingAddress().getId());
     }
 
@@ -92,7 +85,6 @@ class AdminOrderControllerTest {
 
     @Test
     void eagerFetchType_onOrderItems_shouldBeSet() {
-        // Verify that Order.items uses FetchType.EAGER so items are always loaded
         try {
             var field = Order.class.getDeclaredField("items");
             var annotation = field.getAnnotation(jakarta.persistence.OneToMany.class);
@@ -111,7 +103,6 @@ class AdminOrderControllerTest {
         UUID addressId = UUID.randomUUID();
 
         Order order = createOrder(orderId, customerId, addressId);
-        // billingAddress is NOT set — should remain null
 
         OrderResponse response = new OrderResponse(order, List.of());
 
@@ -139,7 +130,7 @@ class AdminOrderControllerTest {
         OrderResponse response = new OrderResponse(order, List.of());
 
         assertNotNull(response.getBillingAddress(), "billingAddress should not be null");
-        assertInstanceOf(AddressResponse.class, response.getBillingAddress());
+        assertInstanceOf(AddressDTO.class, response.getBillingAddress());
         assertEquals(billingAddressId, response.getBillingAddress().getId());
         assertEquals("Via Roma 5", response.getBillingAddress().getStreet());
         assertEquals("Udine", response.getBillingAddress().getCity());

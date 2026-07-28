@@ -40,6 +40,13 @@ public class Order {
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
     private OrderStatus status;
 
+    @Column(unique = true)
+    private String stripeSessionId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
+    private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -80,6 +87,12 @@ public class Order {
 
     public OrderStatus getStatus() { return status; }
     public void setStatus(OrderStatus status) { this.status = status; }
+
+    public String getStripeSessionId() { return stripeSessionId; }
+    public void setStripeSessionId(String stripeSessionId) { this.stripeSessionId = stripeSessionId; }
+
+    public PaymentStatus getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(PaymentStatus paymentStatus) { this.paymentStatus = paymentStatus; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 

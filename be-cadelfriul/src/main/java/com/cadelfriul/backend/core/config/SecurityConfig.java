@@ -53,6 +53,9 @@ public class SecurityConfig {
                         // --- ENDPOINT PUBBLICI PRENOTAZIONI ---
                         .requestMatchers("/api/bookings/**").permitAll()
 
+                        // --- ENDPOINT WEBHOOK STRIPE ---
+                        .requestMatchers("/api/webhooks/**").permitAll()
+
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // --- TUTTO IL RESTO È PROTETTO (incluso /api/auth/me) ---

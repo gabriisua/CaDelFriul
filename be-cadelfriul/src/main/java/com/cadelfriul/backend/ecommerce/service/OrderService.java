@@ -62,7 +62,6 @@ public class OrderService {
         }
         order.setBillingAddress(billingAddress);
 
-        // Inizializziamo il Subtotale (solo costo prodotti)
         BigDecimal subtotal = BigDecimal.ZERO;
 
         for (OrderItemRequest itemRequest : request.getItems()) {
@@ -84,18 +83,14 @@ public class OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
             orderItem.setQuantity(itemRequest.getQuantity());
-
-            // FOTOGRAFIA DEL PREZZO E DELL'IVA AL MOMENTO DELL'ACQUISTO
             orderItem.setPriceAtPurchase(product.getPrice());
             orderItem.setVatRate(product.getVatRate());
 
             order.addItem(orderItem);
 
-            // Calcolo parziale del subtotale
             subtotal = subtotal.add(product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity())));
         }
 
-        // CALCOLO DINAMICO DELLA SPEDIZIONE E DEL TOTALE FINALE
         BigDecimal shippingCost = calculateShippingCost(shippingAddress, subtotal);
         order.setShippingCost(shippingCost);
         order.setTotalAmount(subtotal.add(shippingCost));
@@ -104,21 +99,17 @@ public class OrderService {
         return toResponse(savedOrder);
     }
 
-    // --- NUOVO METODO HELPER PER LE REGOLE DI SPEDIZIONE ---
     private BigDecimal calculateShippingCost(Address address, BigDecimal subtotal) {
-        // Se la nazione non è Italia (controlliamo sia la sigla che il nome per sicurezza)
         if (!"IT".equalsIgnoreCase(address.getCountry()) && !"Italia".equalsIgnoreCase(address.getCountry())) {
-            return new BigDecimal("15.00"); // Forfait per l'estero
+            return new BigDecimal("15.00");
         }
 
-        // Se siamo in Italia, controlliamo la soglia per la spedizione gratuita
         BigDecimal freeShippingThreshold = new BigDecimal("50.00");
 
         if (subtotal.compareTo(freeShippingThreshold) >= 0) {
-            return BigDecimal.ZERO; // Spedizione Gratuita
+            return BigDecimal.ZERO;
         }
 
-        // Spedizione Standard Italia
         return new BigDecimal("5.90");
     }
 
@@ -127,7 +118,7 @@ public class OrderService {
         customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found with id: " + customerId));
 
-        return orderRepository.findByCustomerIdOrderByCreatedAtDesc(customerId)
+        return orderRepository.findByCustomerIdWithDetails(customerId)
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -135,7 +126,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders() {
-        return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
+        return orderRepository.findAllWithDetails()
                 .stream()
                 .map(this::toResponse)
                 .toList();
@@ -143,13 +134,13 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderResponse getOrderById(UUID orderId) {
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findByIdWithDetails(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
         return toResponse(order);
     }
 
     public OrderResponse updateOrderStatus(UUID orderId, OrderStatus status) {
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findByIdWithDetails(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
         order.setStatus(status);
         Order savedOrder = orderRepository.save(order);
