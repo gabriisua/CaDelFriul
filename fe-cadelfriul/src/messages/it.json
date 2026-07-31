@@ -14,5 +14,9 @@
     "cartAria": "Carrello",
     "openMenu": "Apri menu",
     "closeMenu": "Chiudi menu"
+  },
+  "Contact": {
+    "whereToFindUs": "Dove Trovarci",
+    "mapAria": "Mappa che mostra la posizione di Ca' Del Friul"
   }
 }

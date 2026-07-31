@@ -14,5 +14,9 @@
     "cartAria": "Shopping cart",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
+  },
+  "Contact": {
+    "whereToFindUs": "Where to Find Us",
+    "mapAria": "Map showing the location of Ca' Del Friul"
   }
 }

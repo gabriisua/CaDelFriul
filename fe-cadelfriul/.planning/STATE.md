@@ -1,6 +1,6 @@
 # STATE: Ca' Del Friul — Frontend
 
-**Updated:** 2026-07-31 — after quick task 260731-dfc
+**Updated:** 2026-07-31 — after quick task 260731-g7m
 
 ## Project Reference
 
@@ -74,10 +74,12 @@
 | 260728-kqe | Update frontend for dynamic shipping costs, product stock limits, and checkout error handling | 2026-07-28 | `108202c`, `46bf9fe` | [260728-kqe-update-angular-frontend-for-dynamic-ship](./quick/260728-kqe-update-angular-frontend-for-dynamic-ship/) |
 | 260731-dfc | Create a new Next.js customer-facing page for E-Bike Rentals | 2026-07-31 | `7e73953` | [260731-dfc-create-a-new-next-js-customer-facing-pag](./quick/260731-dfc-create-a-new-next-js-customer-facing-pag/) |
 | 260731-ex6 | Implement internationalization (i18n) with next-intl: trilingual routing (en/it/de) under app/[locale], locale-negotiating proxy, Header LanguageSwitcher | 2026-07-31 | `f120092`, `555d52e` | [260731-ex6-implement-internationalization-i18n-in-t](./quick/260731-ex6-implement-internationalization-i18n-in-t/) |
+| 260731-g7m | Update Contact page with responsive Google Maps embed (coordinates 46.187583,12.890750), locale-aware `hl` param, and translated "Where to Find Us" heading (en/it/de) | 2026-07-31 | pending | [260731-g7m-add-google-maps-embed-to-contact-page](./quick/260731-g7m-add-google-maps-embed-to-contact-page/) |
 
 ## Session Continuity
 
 **What was done:**
+- Quick task 260731-g7m: Added Google Maps embed to Contact page — replaced placeholder with responsive iframe (`https://maps.google.com/maps?q=46.187583,12.890750&hl={locale}&z=15&output=embed`), `useLocale()` drives the `hl` param, `useTranslations("Contact")` powers the "Where to Find Us" heading + iframe title in en/it/de, wrapped in `overflow-hidden rounded-xl shadow-md` container with `h-[400px] md:h-[500px]` responsive sizing
 - Quick task 260731-dfc: Created customer-facing E-Bike Rentals page at `/experiences/e-bikes` — self-contained `"use client"` page with 3 mock e-bike models (Friuli City Cruiser €29, Collio Trail E-MTB €49, Alpina Premium E-MTB €69), selectable bike cards (accent ring + check badge, image `onError` fallback), date-based booking form with past-date/end-before-start validation, reactive days/total price summary, and mock submit (setTimeout → sonner toast "Booking request sent successfully!" → form reset). Zero new dependencies; commit `7e73953`.
 - Quick task 260710-mwq: Connected orders page to backend API — added Order interface and fetchOrders() to API client, rewrote orders page as client component with loading skeletons, error handling, empty state with shop link, and real order data table (orderNumber, date it-IT, status badge, EUR total)
 - Quick task 260710-c3d: E-commerce storefront, cart & checkout — created dynamic `/shop` page fetching products from API, created `CartContext` with localStorage persistence, created `/cart` page with quantity controls and order summary, created `/checkout` page with address selection and order placement (auth-gated), updated Header with cart badge and Shop nav link, updated Footer with Shop link, fixed CartContext lint warning using lazy initializer pattern
@@ -100,7 +102,7 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-07-31 — Completed quick task 260731-ex6: Implement internationalization (i18n) with next-intl
+**Last activity:** 2026-07-31 — Completed quick task 260731-g7m: Google Maps embed on Contact page
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)

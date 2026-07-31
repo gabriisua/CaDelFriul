@@ -1,10 +1,18 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
+const RESORT_COORDS = { lat: 46.187583, lng: 12.89075 };
+
 export default function ContactPage() {
+  const locale = useLocale();
+  const t = useTranslations("Contact");
+
+  const mapSrc = `https://maps.google.com/maps?q=${RESORT_COORDS.lat},${RESORT_COORDS.lng}&hl=${locale}&z=15&output=embed`;
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 md:px-8">
       <h1 className="font-heading text-3xl font-semibold md:text-4xl">
@@ -37,11 +45,21 @@ export default function ContactPage() {
             </div>
           </dl>
 
-          {/* Map placeholder */}
-          <div className="mt-8 flex aspect-[4/3] items-center justify-center rounded-lg bg-secondary">
-            <p className="text-sm italic text-muted-foreground">
-              [Map placeholder — embedded map in future phase]
-            </p>
+          {/* Map */}
+          <div className="mt-8">
+            <h2 className="font-heading text-2xl font-semibold">
+              {t("whereToFindUs")}
+            </h2>
+            <div className="mt-4 overflow-hidden rounded-xl shadow-md">
+              <iframe
+                src={mapSrc}
+                title={t("mapAria")}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[400px] w-full border-0 md:h-[500px]"
+              />
+            </div>
           </div>
         </div>
 

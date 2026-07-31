@@ -14,5 +14,9 @@
     "cartAria": "Warenkorb",
     "openMenu": "Menü öffnen",
     "closeMenu": "Menü schließen"
+  },
+  "Contact": {
+    "whereToFindUs": "So Finden Sie Uns",
+    "mapAria": "Karte mit dem Standort von Ca' Del Friul"
   }
 }
