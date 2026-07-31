@@ -32,5 +32,6 @@ None
 | 260716-ini | Align OrderDetail models to backend API payload | 2026-07-16 | d0f9036 | [260716-ini-align-orderdetail-models-to-backend-api](./quick/260716-ini-align-orderdetail-models-to-backend-api/) |
 | 260716-m3h | Fix change detection assertion error in global components | 2026-07-16 | ed4c4d4 | [260716-m3h-fix-change-detection-assertion-error-in-global-components](./quick/260716-m3h-fix-change-detection-assertion-error-in-global-components/) |
 | 260716-o9z | Add vatRate to Product model, edit dialog, and grid | 2026-07-16 | 68af691 | [260716-o9z-vat-rate](./quick/260716-o9z-vat-rate/) |
+| 260731-n1j | Update the Angular Edit Product component to display visual previews of existing product images | 2026-07-31 | 8ac6c35 | [260731-n1j-update-the-angular-edit-product-componen](./quick/260731-n1j-update-the-angular-edit-product-componen/) |
 
-Last activity: 2026-07-16 - Completed quick task 260716-o9z: Add vatRate to Product
+Last activity: 2026-07-31 - Completed quick task 260731-n1j: Update the Angular Edit Product component to display visual previews of existing product images
