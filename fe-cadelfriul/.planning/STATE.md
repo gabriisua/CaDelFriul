@@ -74,7 +74,7 @@
 | 260728-kqe | Update frontend for dynamic shipping costs, product stock limits, and checkout error handling | 2026-07-28 | `108202c`, `46bf9fe` | [260728-kqe-update-angular-frontend-for-dynamic-ship](./quick/260728-kqe-update-angular-frontend-for-dynamic-ship/) |
 | 260731-dfc | Create a new Next.js customer-facing page for E-Bike Rentals | 2026-07-31 | `7e73953` | [260731-dfc-create-a-new-next-js-customer-facing-pag](./quick/260731-dfc-create-a-new-next-js-customer-facing-pag/) |
 | 260731-ex6 | Implement internationalization (i18n) with next-intl: trilingual routing (en/it/de) under app/[locale], locale-negotiating proxy, Header LanguageSwitcher | 2026-07-31 | `f120092`, `555d52e` | [260731-ex6-implement-internationalization-i18n-in-t](./quick/260731-ex6-implement-internationalization-i18n-in-t/) |
-| 260731-g7m | Update Contact page with responsive Google Maps embed (coordinates 46.187583,12.890750), locale-aware `hl` param, and translated "Where to Find Us" heading (en/it/de) | 2026-07-31 | pending | [260731-g7m-add-google-maps-embed-to-contact-page](./quick/260731-g7m-add-google-maps-embed-to-contact-page/) |
+| 260731-g7m | Update Contact page with responsive Google Maps embed (coordinates 46.187583,12.890750), locale-aware `hl` param, and translated "Where to Find Us" heading (en/it/de) | 2026-07-31 | `9e6453b` | [260731-g7m-add-google-maps-embed-to-contact-page](./quick/260731-g7m-add-google-maps-embed-to-contact-page/) |
 
 ## Session Continuity
 
