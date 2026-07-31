@@ -63,6 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await apiLogout();
     localStorage.removeItem("cadelfriul_cart");
     setUser(null);
+    
+    window.location.href = "/";
   }, []);
 
   return (
