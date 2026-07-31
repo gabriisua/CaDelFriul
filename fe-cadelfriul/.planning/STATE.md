@@ -1,6 +1,6 @@
 # STATE: Ca' Del Friul — Frontend
 
-**Updated:** 2026-07-28 — after quick task 260728-kqe
+**Updated:** 2026-07-31 — after quick task 260731-dfc
 
 ## Project Reference
 
@@ -72,10 +72,12 @@
 | 260727-g6g | Implement final Stripe Checkout redirect logic | 2026-07-27 | `f062ad4`, `0467feb` | [260727-g6g-implement-final-stripe-checkout-redirect](./quick/260727-g6g-implement-final-stripe-checkout-redirect/) |
 | 260727-k36 | Create checkout success page with cart clearing and dashboard redirect | 2026-07-27 | `a1b09da` | [260727-k36-create-checkout-success-page-with-post-p](./quick/260727-k36-create-checkout-success-page-with-post-p/) |
 | 260728-kqe | Update frontend for dynamic shipping costs, product stock limits, and checkout error handling | 2026-07-28 | `108202c`, `46bf9fe` | [260728-kqe-update-angular-frontend-for-dynamic-ship](./quick/260728-kqe-update-angular-frontend-for-dynamic-ship/) |
+| 260731-dfc | Create a new Next.js customer-facing page for E-Bike Rentals | 2026-07-31 | `7e73953` | [260731-dfc-create-a-new-next-js-customer-facing-pag](./quick/260731-dfc-create-a-new-next-js-customer-facing-pag/) |
 
 ## Session Continuity
 
 **What was done:**
+- Quick task 260731-dfc: Created customer-facing E-Bike Rentals page at `/experiences/e-bikes` — self-contained `"use client"` page with 3 mock e-bike models (Friuli City Cruiser €29, Collio Trail E-MTB €49, Alpina Premium E-MTB €69), selectable bike cards (accent ring + check badge, image `onError` fallback), date-based booking form with past-date/end-before-start validation, reactive days/total price summary, and mock submit (setTimeout → sonner toast "Booking request sent successfully!" → form reset). Zero new dependencies; commit `7e73953`.
 - Quick task 260710-mwq: Connected orders page to backend API — added Order interface and fetchOrders() to API client, rewrote orders page as client component with loading skeletons, error handling, empty state with shop link, and real order data table (orderNumber, date it-IT, status badge, EUR total)
 - Quick task 260710-c3d: E-commerce storefront, cart & checkout — created dynamic `/shop` page fetching products from API, created `CartContext` with localStorage persistence, created `/cart` page with quantity controls and order summary, created `/checkout` page with address selection and order placement (auth-gated), updated Header with cart badge and Shop nav link, updated Footer with Shop link, fixed CartContext lint warning using lazy initializer pattern
 - Quick task 260710-a1b: Unified auth flow — migrated from localStorage to js-cookie (`accessToken` cookie), expanded AuthContext with `isAuthenticated`, `login()`, `logout()`, wrapped root layout with `<AuthProvider>`, added conditional Sign In/My Dashboard/Logout to Header, wired login page to use context, added "Back to Shop" link and context-based logout to dashboard sidebar, created `src/proxy.ts` (Next.js 16) for route protection on `/dashboard/*` and auth redirect
@@ -97,13 +99,14 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-07-28 — Completed quick task 260728-kqe: Dynamic shipping costs, product stock limits, and checkout error handling
+**Last activity:** 2026-07-31 — Completed quick task 260731-dfc: Create a new Next.js customer-facing page for E-Bike Rentals
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
 - Consider adding payment gateway integration for checkout
 
 **Relevant context for next session:**
+- Quick task 260731-dfc: `/experiences/e-bikes` live and static-prerendered — 3 mock e-bikes, selectable cards, date validation, reactive price summary, mock booking submit (toast + reset). `handleBook` handler is the seam for the Phase 3 booking engine/API. Note: lucide-react 1.23 exports `Bike` (not `Bicycle`).
 - 20 v1 requirements structurally complete — all placeholder pages in place
 - Quick task 260710-c3d: E-commerce implemented — `/shop` fetches products from API, `/cart` with quantity controls, `/checkout` with address selection and order placement (auth-gated), CartContext provides `addToCart`, `removeFromCart`, `updateQuantity`, `clearCart`, `cartTotal`, `itemCount` with localStorage persistence
 - Quick task 260710-mwq: Orders page connected to backend — Order interface and fetchOrders() added to API client, orders page fetches real data from GET /api/orders with loading skeletons, error handling, empty state with shop link
