@@ -76,6 +76,7 @@
 | 260731-ex6 | Implement internationalization (i18n) with next-intl: trilingual routing (en/it/de) under app/[locale], locale-negotiating proxy, Header LanguageSwitcher | 2026-07-31 | `f120092`, `555d52e` | [260731-ex6-implement-internationalization-i18n-in-t](./quick/260731-ex6-implement-internationalization-i18n-in-t/) |
 | 260731-g7m | Update Contact page with responsive Google Maps embed (coordinates 46.187583,12.890750), locale-aware `hl` param, and translated "Where to Find Us" heading (en/it/de) | 2026-07-31 | `9e6453b` | [260731-g7m-add-google-maps-embed-to-contact-page](./quick/260731-g7m-add-google-maps-embed-to-contact-page/) |
 | 260731-lfb | Create a Product Detail Page (PDP) for the eco-resort shop using Next.js App Router and Tailwind CSS | 2026-07-31 | `027d6fb`, `6c6cdbc`, `a3fdd05` | [260731-lfb-create-a-product-detail-page-pdp-for-the](./quick/260731-lfb-create-a-product-detail-page-pdp-for-the/) |
+| 260731-mi2 | Refactor the Product Detail Page (PDP) at app/[locale]/shop/[id]/page.tsx to fetch actual data from the Spring Boot API instead of using the mock data | 2026-07-31 | `1eea998`, `f0b1a60`, `27f91ed` | [260731-mi2-refactor-the-product-detail-page-pdp-at-](./quick/260731-mi2-refactor-the-product-detail-page-pdp-at-/) |
 
 ## Session Continuity
 
@@ -103,7 +104,7 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-07-31 — Completed quick task 260731-lfb: Create a Product Detail Page (PDP) for the eco-resort shop using Next.js App Router and Tailwind CSS
+**Last activity:** 2026-07-31 — Completed quick task 260731-mi2: Refactor the Product Detail Page (PDP) at app/[locale]/shop/[id]/page.tsx to fetch actual data from the Spring Boot API instead of using the mock data
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
