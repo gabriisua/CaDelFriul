@@ -73,6 +73,7 @@
 | 260727-k36 | Create checkout success page with cart clearing and dashboard redirect | 2026-07-27 | `a1b09da` | [260727-k36-create-checkout-success-page-with-post-p](./quick/260727-k36-create-checkout-success-page-with-post-p/) |
 | 260728-kqe | Update frontend for dynamic shipping costs, product stock limits, and checkout error handling | 2026-07-28 | `108202c`, `46bf9fe` | [260728-kqe-update-angular-frontend-for-dynamic-ship](./quick/260728-kqe-update-angular-frontend-for-dynamic-ship/) |
 | 260731-dfc | Create a new Next.js customer-facing page for E-Bike Rentals | 2026-07-31 | `7e73953` | [260731-dfc-create-a-new-next-js-customer-facing-pag](./quick/260731-dfc-create-a-new-next-js-customer-facing-pag/) |
+| 260731-ex6 | Implement internationalization (i18n) with next-intl: trilingual routing (en/it/de) under app/[locale], locale-negotiating proxy, Header LanguageSwitcher | 2026-07-31 | `f120092`, `555d52e` | [260731-ex6-implement-internationalization-i18n-in-t](./quick/260731-ex6-implement-internationalization-i18n-in-t/) |
 
 ## Session Continuity
 
@@ -99,7 +100,7 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-07-31 — Completed quick task 260731-dfc: Create a new Next.js customer-facing page for E-Bike Rentals
+**Last activity:** 2026-07-31 — Completed quick task 260731-ex6: Implement internationalization (i18n) with next-intl
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
