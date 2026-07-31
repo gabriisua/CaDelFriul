@@ -2,6 +2,7 @@
 
 import { use, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogClose,
@@ -9,8 +10,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, ImageOff, Images, X } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
+import { toast } from "sonner";
+import {
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Droplets,
+  ImageOff,
+  Images,
+  Minus,
+  Package,
+  Plus,
+  ShoppingCart,
+  Sparkles,
+  X,
+} from "lucide-react";
 
 interface MockProduct {
   id: string;
@@ -90,6 +110,32 @@ export default function ProductDetailPage({
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [mobileIndex, setMobileIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated } = useAuth();
+  const { addToCart } = useCart();
+  const router = useRouter();
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      toast("Sign in to add items to your cart", {
+        description: "Create an account to start building your order.",
+        action: {
+          label: "Sign In",
+          onClick: () => router.push("/login"),
+        },
+      });
+      return;
+    }
+    addToCart({
+      productId: product.id,
+      productName: product.name,
+      price: product.price,
+      imageUrl: product.images[0] ?? "",
+      stockQuantity: product.stockQuantity,
+      quantity,
+    });
+    toast.success(`${product.name} added to cart`);
+  };
 
   const scrollCarousel = (dir: "prev" | "next") => {
     const len = product.images.length;
@@ -247,7 +293,140 @@ export default function ProductDetailPage({
         </section>
 
         {/* Right column: product info & buy section */}
-        <div id="product-info" />
+        <div>
+          <p className="text-sm font-medium uppercase tracking-widest text-accent">
+            Estate Apothecary
+          </p>
+          <h1 className="mt-2 font-heading text-3xl font-semibold md:text-4xl">
+            {product.name}
+          </h1>
+          <p className="mt-4 text-3xl font-semibold text-accent">
+            €{product.price.toFixed(2)}
+          </p>
+          <p className="mt-5 leading-relaxed text-muted-foreground">
+            {product.description}
+          </p>
+          <ul className="mt-6 space-y-2">
+            {product.features.map((feature) => (
+              <li
+                key={feature}
+                className="flex items-start gap-2 text-sm text-muted-foreground"
+              >
+                <Check
+                  className="mt-0.5 size-4 shrink-0 text-accent"
+                  aria-hidden
+                />
+                {feature}
+              </li>
+            ))}
+          </ul>
+
+          <Separator className="my-8" />
+
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">Quantity</span>
+            <div className="flex items-center rounded-full border border-border">
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                disabled={quantity <= 1}
+                className="flex size-10 items-center justify-center rounded-l-full disabled:opacity-40"
+              >
+                <Minus className="size-4" />
+              </button>
+              <span className="w-10 text-center text-sm font-semibold">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setQuantity((q) => Math.min(product.stockQuantity, q + 1))
+                }
+                disabled={quantity >= product.stockQuantity}
+                className="flex size-10 items-center justify-center rounded-r-full disabled:opacity-40"
+              >
+                <Plus className="size-4" />
+              </button>
+            </div>
+          </div>
+
+          {product.stockQuantity <= 5 && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Only {product.stockQuantity} left in stock
+            </p>
+          )}
+
+          <Button
+            variant="default"
+            size="lg"
+            className="mt-6 w-full"
+            onClick={handleAddToCart}
+            disabled={!isAuthenticated || product.stockQuantity === 0}
+          >
+            <ShoppingCart className="mr-2 size-4" />
+            {!isAuthenticated
+              ? "Sign In to Buy"
+              : product.stockQuantity === 0
+                ? "Out of Stock"
+                : "Add to Cart"}
+          </Button>
+
+          <Separator className="my-8" />
+
+          <h2 className="font-heading text-lg font-semibold">
+            Product Details
+          </h2>
+          <div className="mt-4 divide-y divide-border border-y border-border">
+            <details className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-medium [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center gap-2">
+                  <Droplets className="size-4 text-accent" aria-hidden />
+                  Ingredients
+                </span>
+                <ChevronDown
+                  className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
+                  aria-hidden
+                />
+              </summary>
+              <p className="pb-4 text-sm text-muted-foreground">
+                100% pure Lavandula angustifolia essential oil. No synthetic
+                additives, carriers, or fillers.
+              </p>
+            </details>
+            <details className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-medium [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center gap-2">
+                  <Sparkles className="size-4 text-accent" aria-hidden />
+                  Usage
+                </span>
+                <ChevronDown
+                  className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
+                  aria-hidden
+                />
+              </summary>
+              <p className="pb-4 text-sm text-muted-foreground">
+                Add 3–5 drops to a diffuser, or blend with a carrier oil for a
+                calming massage. Avoid direct contact with eyes.
+              </p>
+            </details>
+            <details className="group">
+              <summary className="flex cursor-pointer list-none items-center justify-between py-4 text-sm font-medium [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center gap-2">
+                  <Package className="size-4 text-accent" aria-hidden />
+                  Volume
+                </span>
+                <ChevronDown
+                  className="size-4 text-muted-foreground transition-transform group-open:rotate-180"
+                  aria-hidden
+                />
+              </summary>
+              <p className="pb-4 text-sm text-muted-foreground">
+                40 ml amber glass bottle with dropper — approximately 800 drops.
+                Made in small batches in Friuli.
+              </p>
+            </details>
+          </div>
+        </div>
       </div>
     </div>
   );
