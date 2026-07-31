@@ -75,6 +75,7 @@
 | 260731-dfc | Create a new Next.js customer-facing page for E-Bike Rentals | 2026-07-31 | `7e73953` | [260731-dfc-create-a-new-next-js-customer-facing-pag](./quick/260731-dfc-create-a-new-next-js-customer-facing-pag/) |
 | 260731-ex6 | Implement internationalization (i18n) with next-intl: trilingual routing (en/it/de) under app/[locale], locale-negotiating proxy, Header LanguageSwitcher | 2026-07-31 | `f120092`, `555d52e` | [260731-ex6-implement-internationalization-i18n-in-t](./quick/260731-ex6-implement-internationalization-i18n-in-t/) |
 | 260731-g7m | Update Contact page with responsive Google Maps embed (coordinates 46.187583,12.890750), locale-aware `hl` param, and translated "Where to Find Us" heading (en/it/de) | 2026-07-31 | `9e6453b` | [260731-g7m-add-google-maps-embed-to-contact-page](./quick/260731-g7m-add-google-maps-embed-to-contact-page/) |
+| 260731-lfb | Create a Product Detail Page (PDP) for the eco-resort shop using Next.js App Router and Tailwind CSS | 2026-07-31 | `027d6fb`, `6c6cdbc`, `a3fdd05` | [260731-lfb-create-a-product-detail-page-pdp-for-the](./quick/260731-lfb-create-a-product-detail-page-pdp-for-the/) |
 
 ## Session Continuity
 
@@ -102,7 +103,7 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-07-31 — Completed quick task 260731-g7m: Google Maps embed on Contact page
+**Last activity:** 2026-07-31 — Completed quick task 260731-lfb: Create a Product Detail Page (PDP) for the eco-resort shop using Next.js App Router and Tailwind CSS
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
