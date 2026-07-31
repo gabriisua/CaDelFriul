@@ -1,10 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, act, cleanup } from "@testing-library/react";
 import ProductDetailPage from "./page";
 
-const mockFetchProduct = vi.fn();
-const mockAddToCart = vi.fn();
-const mockPush = vi.fn();
+const { mockFetchProduct, mockAddToCart, mockPush } = vi.hoisted(() => ({
+  mockFetchProduct: vi.fn(),
+  mockAddToCart: vi.fn(),
+  mockPush: vi.fn(),
+}));
 
 vi.mock("@/lib/api", () => ({
   fetchProduct: mockFetchProduct,
@@ -37,6 +39,10 @@ describe("Product Detail Page", () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it("renders the product data after the fetch resolves", async () => {
     mockFetchProduct.mockResolvedValue({
       id: "p1",
@@ -49,7 +55,9 @@ describe("Product Detail Page", () => {
       stockQuantity: 10,
     });
 
-    render(<ProductDetailPage params={Promise.resolve({ id: "p1" })} />);
+    await act(async () => {
+      render(<ProductDetailPage params={Promise.resolve({ id: "p1" })} />);
+    });
 
     expect(
       await screen.findByRole("heading", { name: /test lavender oil/i })
@@ -60,7 +68,9 @@ describe("Product Detail Page", () => {
   it("shows an error message when the fetch fails", async () => {
     mockFetchProduct.mockRejectedValue(new Error("network down"));
 
-    render(<ProductDetailPage params={Promise.resolve({ id: "p1" })} />);
+    await act(async () => {
+      render(<ProductDetailPage params={Promise.resolve({ id: "p1" })} />);
+    });
 
     expect(
       await screen.findByText(/failed to load product/i)
