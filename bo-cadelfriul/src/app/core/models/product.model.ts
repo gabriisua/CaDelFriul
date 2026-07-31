@@ -9,6 +9,7 @@ export interface Product {
   categoryName: string;
   attributes: Record<string, string>;
   imageIds: string[];
+  imageUrls: string[];
   available: boolean;
 }
 

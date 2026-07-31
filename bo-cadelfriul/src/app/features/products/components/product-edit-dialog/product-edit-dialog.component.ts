@@ -90,6 +90,7 @@ export class ProductEditDialogComponent implements OnChanges {
   });
 
   imagePreviewUrls: string[] = [];
+  existingImageUrls: string[] = [];
   selectedFiles: File[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -103,16 +104,14 @@ export class ProductEditDialogComponent implements OnChanges {
         categoryId: this.product.categoryId,
         available: this.product.available,
       });
-      if (this.product.imageIds?.length > 0) {
-        this.imagePreviewUrls = this.product.imageIds.map(id =>
-          `${environment.apiUrl}/api/products/images/${id}`
-        );
-      } else {
-        this.imagePreviewUrls = [];
-      }
+      this.existingImageUrls = this.product.imageUrls?.map(url =>
+        url.startsWith('http') ? url : `${environment.apiUrl}${url}`
+      ) ?? [];
+      this.imagePreviewUrls = [];
       this.selectedFiles = [];
     } else if (changes['open'] && this.open && !this.product) {
       this.form.reset({ name: '', description: '', price: 0, vatRate: 22, stockQuantity: 0, categoryId: '', available: true });
+      this.existingImageUrls = [];
       this.imagePreviewUrls = [];
       this.selectedFiles = [];
     }
@@ -130,6 +129,10 @@ export class ProductEditDialogComponent implements OnChanges {
         reader.readAsDataURL(file);
       });
     }
+  }
+
+  removeExistingImage(index: number): void {
+    this.existingImageUrls.splice(index, 1);
   }
 
   onSubmit(): void {
