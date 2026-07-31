@@ -1,0 +1,18 @@
+{
+  "Nav": {
+    "home": "Home",
+    "rooms": "Rooms",
+    "experiences": "Experiences",
+    "shop": "Shop",
+    "about": "About",
+    "contact": "Contact",
+    "dashboard": "My Dashboard",
+    "checkout": "Checkout",
+    "signIn": "Sign In",
+    "logout": "Logout",
+    "cart": "Cart",
+    "cartAria": "Shopping cart",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  }
+}

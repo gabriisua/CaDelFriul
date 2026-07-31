@@ -1,0 +1,18 @@
+{
+  "Nav": {
+    "home": "Home",
+    "rooms": "Camere",
+    "experiences": "Esperienze",
+    "shop": "Negozio",
+    "about": "Chi Siamo",
+    "contact": "Contatti",
+    "dashboard": "Il Mio Account",
+    "checkout": "Checkout",
+    "signIn": "Accedi",
+    "logout": "Esci",
+    "cart": "Carrello",
+    "cartAria": "Carrello",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu"
+  }
+}
