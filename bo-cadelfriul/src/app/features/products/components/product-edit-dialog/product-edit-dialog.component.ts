@@ -51,6 +51,21 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div>
               <label class="block text-sm font-medium text-brand-text mb-1">Images</label>
+              @if (existingImageUrls.length > 0) {
+                <div class="flex gap-3 mt-2 flex-wrap">
+                  @for (url of existingImageUrls; track url; let i = $index) {
+                    <div class="relative">
+                      <img [src]="url" class="w-20 h-20 object-cover rounded-md shadow-sm border border-gray-200" />
+                      <button
+                        type="button"
+                        (click)="removeExistingImage(i)"
+                        class="absolute -top-1.5 -right-1.5 h-5 w-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center shadow-sm hover:bg-red-600"
+                        [attr.aria-label]="'Remove image ' + (i + 1)"
+                      >&times;</button>
+                    </div>
+                  }
+                </div>
+              }
               @if (imagePreviewUrls.length > 0) {
                 <div class="flex gap-2 mt-2 flex-wrap">
                   @for (url of imagePreviewUrls; track url) {
