@@ -1,0 +1,207 @@
+package com.cadelfriul.backend.core.user.service;
+
+import com.cadelfriul.backend.core.user.dto.AddressRequest;
+import com.cadelfriul.backend.core.user.dto.CustomerCreateRequest;
+import com.cadelfriul.backend.core.user.dto.CustomerLogResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerResponse;
+import com.cadelfriul.backend.core.user.dto.CustomerUpdateRequest;
+import com.cadelfriul.backend.core.user.entity.Address;
+import com.cadelfriul.backend.core.user.entity.Customer;
+import com.cadelfriul.backend.core.user.entity.CustomerLog;
+import com.cadelfriul.backend.core.user.repository.CustomerLogRepository;
+import com.cadelfriul.backend.core.user.repository.CustomerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@Transactional
+public class CustomerService {
+
+    private final CustomerRepository customerRepository;
+    private final CustomerLogRepository customerLogRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomerService(CustomerRepository customerRepository,
+                           CustomerLogRepository customerLogRepository,
+                           PasswordEncoder passwordEncoder) {
+        this.customerRepository = customerRepository;
+        this.customerLogRepository = customerLogRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomerResponse> findAll() {
+        return customerRepository.findAll()
+                .stream()
+                .map(CustomerResponse::new)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public CustomerResponse findById(UUID id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+        return new CustomerResponse(customer);
+    }
+
+    public CustomerResponse create(CustomerCreateRequest request) {
+        if (customerRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email " + request.getEmail() + " is already in use");
+        }
+
+        Customer customer = new Customer(
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword()),
+                request.getFirstName(),
+                request.getLastName(),
+                request.getPhone()
+        );
+
+        if (request.getShippingAddress() != null) {
+            Address shipping = toAddress(request.getShippingAddress());
+            shipping.setDefaultShipping(true);
+
+            if (request.getBillingAddress() == null) {
+                shipping.setDefaultBilling(true);
+            }
+
+            customer.addAddress(shipping);
+        }
+
+        if (request.getBillingAddress() != null) {
+            Address billing = toAddress(request.getBillingAddress());
+            billing.setDefaultBilling(true);
+            customer.addAddress(billing);
+        }
+
+        CustomerLog log = new CustomerLog(null, "CREATED", "Customer account created");
+        customer.addLog(log);
+
+        customer = customerRepository.save(customer);
+        return new CustomerResponse(customer);
+    }
+
+    public CustomerResponse update(UUID id, CustomerUpdateRequest request) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+
+        StringBuilder details = new StringBuilder();
+
+        if (request.getEmail() != null && !request.getEmail().equals(customer.getEmail())) {
+            if (customerRepository.existsByEmail(request.getEmail())) {
+                throw new RuntimeException("Email " + request.getEmail() + " is already in use");
+            }
+            details.append("Email changed from '").append(customer.getEmail())
+                    .append("' to '").append(request.getEmail()).append("'; ");
+            customer.setEmail(request.getEmail());
+        }
+
+        if (request.getFirstName() != null && !request.getFirstName().equals(customer.getFirstName())) {
+            details.append("First name changed from '").append(customer.getFirstName())
+                    .append("' to '").append(request.getFirstName()).append("'; ");
+            customer.setFirstName(request.getFirstName());
+        }
+
+        if (request.getLastName() != null && !request.getLastName().equals(customer.getLastName())) {
+            details.append("Last name changed from '").append(customer.getLastName())
+                    .append("' to '").append(request.getLastName()).append("'; ");
+            customer.setLastName(request.getLastName());
+        }
+
+        if (request.getPhone() != null && !request.getPhone().equals(customer.getPhone())) {
+            details.append("Phone changed from '").append(customer.getPhone())
+                    .append("' to '").append(request.getPhone()).append("'; ");
+            customer.setPhone(request.getPhone());
+        }
+
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            details.append("Password changed; ");
+            customer.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        if (request.getShippingAddress() != null) {
+            Address existing = customer.getAddresses().stream()
+                    .filter(Address::isDefaultShipping)
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing != null) {
+                applyAddressRequest(existing, request.getShippingAddress());
+                details.append("Shipping address updated; ");
+            } else {
+                Address shipping = toAddress(request.getShippingAddress());
+                shipping.setDefaultShipping(true);
+                customer.addAddress(shipping);
+                details.append("Shipping address added; ");
+            }
+        }
+
+        if (request.getBillingAddress() != null) {
+            Address existing = customer.getAddresses().stream()
+                    .filter(Address::isDefaultBilling)
+                    .findFirst()
+                    .orElse(null);
+
+            if (existing != null) {
+                applyAddressRequest(existing, request.getBillingAddress());
+                details.append("Billing address updated; ");
+            } else {
+                Address billing = toAddress(request.getBillingAddress());
+                billing.setDefaultBilling(true);
+                customer.addAddress(billing);
+                details.append("Billing address added; ");
+            }
+        }
+
+        if (!details.isEmpty()) {
+            CustomerLog log = new CustomerLog(null, "UPDATED", details.toString());
+            customer.addLog(log);
+        }
+
+        customer = customerRepository.save(customer);
+        return new CustomerResponse(customer);
+    }
+
+    public void delete(UUID id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
+        customerRepository.delete(customer);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CustomerLogResponse> findLogsByCustomerId(UUID id) {
+        if (!customerRepository.existsById(id)) {
+            throw new RuntimeException("Customer not found with id: " + id);
+        }
+        return customerLogRepository.findAllByCustomerIdOrderByTimestampDesc(id)
+                .stream()
+                .map(CustomerLogResponse::new)
+                .toList();
+    }
+
+    private Address toAddress(AddressRequest request) {
+        Address address = new Address();
+        address.setStreet(request.getStreet());
+        address.setHouseNumber(request.getHouseNumber());
+        address.setCity(request.getCity());
+        address.setZipCode(request.getZipCode());
+        address.setProvince(request.getProvince());
+        address.setCountry(request.getCountry());
+        address.setAdditionalInfo(request.getAdditionalInfo());
+        return address;
+    }
+
+    private void applyAddressRequest(Address address, AddressRequest request) {
+        if (request.getStreet() != null) address.setStreet(request.getStreet());
+        if (request.getHouseNumber() != null) address.setHouseNumber(request.getHouseNumber());
+        if (request.getCity() != null) address.setCity(request.getCity());
+        if (request.getZipCode() != null) address.setZipCode(request.getZipCode());
+        if (request.getProvince() != null) address.setProvince(request.getProvince());
+        if (request.getCountry() != null) address.setCountry(request.getCountry());
+        if (request.getAdditionalInfo() != null) address.setAdditionalInfo(request.getAdditionalInfo());
+    }
+}
