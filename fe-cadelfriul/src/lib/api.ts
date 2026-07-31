@@ -94,6 +94,7 @@ export interface Product {
   description: string;
   price: number;
   imageUrls: string[];
+  attributes?: Record<string, string>;
   available: boolean;
   stockQuantity: number;
 }
@@ -129,6 +130,10 @@ export interface Order {
 
 export async function fetchProducts(): Promise<Product[]> {
   return apiFetch<Product[]>("/api/products");
+}
+
+export async function fetchProduct(id: string): Promise<Product> {
+  return apiFetch<Product>(`/api/products/${id}`);
 }
 
 export interface OrderResponse {
