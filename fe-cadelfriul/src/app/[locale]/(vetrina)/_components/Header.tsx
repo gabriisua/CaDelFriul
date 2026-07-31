@@ -1,21 +1,22 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { LogOut, Menu, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { cn } from "@/lib/utils";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/rooms", label: "Rooms" },
-  { href: "/experiences", label: "Experiences" },
-  { href: "/shop", label: "Shop" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", key: "home" },
+  { href: "/rooms", key: "rooms" },
+  { href: "/experiences", key: "experiences" },
+  { href: "/shop", key: "shop" },
+  { href: "/about", key: "about" },
+  { href: "/contact", key: "contact" },
 ];
 
 export default function Header() {
@@ -25,6 +26,7 @@ export default function Header() {
   const router = useRouter();
   const { isAuthenticated, logout } = useAuth();
   const { itemCount } = useCart();
+  const t = useTranslations("Nav");
 
   useEffect(() => {
     setIsMounted(true);
@@ -64,21 +66,24 @@ export default function Header() {
                     : "text-foreground/70"
                 )}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             );
           })}
         </nav>
 
-        {/* CTA + Auth + Cart + Mobile toggle */}
+        {/* CTA + Auth + Cart + Language + Mobile toggle */}
         <div className="flex items-center gap-3">
+          <div className="hidden md:flex">
+            <LanguageSwitcher />
+          </div>
           <Link
             href="/cart"
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon" }),
               "relative"
             )}
-            aria-label="Shopping cart"
+            aria-label={t("cartAria")}
           >
             <ShoppingBag className="size-5" />
             {isMounted && itemCount > 0 && (
@@ -97,14 +102,14 @@ export default function Header() {
                 )}
               >
                 <User className="mr-2 size-4" />
-                My Dashboard
+                {t("dashboard")}
               </Link>
               <Button
                 variant="ghost"
                 size="icon"
                 className="hidden md:inline-flex text-muted-foreground"
                 onClick={handleLogout}
-                aria-label="Logout"
+                aria-label={t("logout")}
               >
                 <LogOut className="size-4" />
               </Button>
@@ -117,13 +122,13 @@ export default function Header() {
                 "hidden md:inline-flex"
               )}
             >
-              Sign In
+              {t("signIn")}
             </Link>
           )}
           <button
             className="md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-label={mobileOpen ? t("closeMenu") : t("openMenu")}
           >
             {mobileOpen ? (
               <X className="size-5" />
@@ -152,17 +157,19 @@ export default function Header() {
                   isActive ? "text-accent" : "text-foreground/70"
                 )}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             );
           })}
+          <LanguageSwitcher />
           <Link
             href="/cart"
             onClick={() => setMobileOpen(false)}
             className="flex items-center gap-2 py-2 text-sm font-medium text-foreground/70 transition-colors hover:text-accent"
           >
             <ShoppingBag className="size-4" />
-            Cart{itemCount > 0 ? ` (${itemCount})` : ""}
+            {t("cart")}
+            {itemCount > 0 ? ` (${itemCount})` : ""}
           </Link>
           {isAuthenticated ? (
             <>
@@ -174,7 +181,7 @@ export default function Header() {
                   "mt-3 w-full block text-center"
                 )}
               >
-                My Dashboard
+                {t("dashboard")}
               </Link>
               <Button
                 variant="ghost"
@@ -185,7 +192,7 @@ export default function Header() {
                 }}
               >
                 <LogOut className="mr-2 size-4" />
-                Logout
+                {t("logout")}
               </Button>
             </>
           ) : (
@@ -197,7 +204,7 @@ export default function Header() {
                 "mt-3 w-full block text-center"
               )}
             >
-              Sign In
+              {t("signIn")}
             </Link>
           )}
         </nav>
