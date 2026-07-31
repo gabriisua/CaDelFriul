@@ -11,12 +11,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getImageUrl } from "@/lib/api";
+import { Link } from "@/i18n/navigation";
 
 interface ProductCardProps {
   name: string;
   price: string;
   description: string;
   imageUrls?: string[]; // ✅ Modificato da imageIds a imageUrls
+  href?: string;
 }
 
 export default function ProductCard({
@@ -24,6 +26,7 @@ export default function ProductCard({
                                       price,
                                       description,
                                       imageUrls = [], // ✅ Modificato qui
+                                      href,
                                     }: ProductCardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [imgSrc, setImgSrc] = useState(
@@ -93,7 +96,13 @@ export default function ProductCard({
         </div>
         <CardHeader>
           <CardTitle className="font-heading text-xl font-semibold">
-            {name}
+            {href ? (
+              <Link href={href} className="transition-colors hover:text-accent">
+                {name}
+              </Link>
+            ) : (
+              name
+            )}
           </CardTitle>
           <CardDescription className="line-clamp-2 text-sm">
             {description}

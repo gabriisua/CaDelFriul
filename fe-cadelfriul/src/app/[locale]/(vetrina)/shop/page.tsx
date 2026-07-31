@@ -94,6 +94,7 @@ export default function ShopPage() {
                                 price={`€${product.price.toFixed(2)}`}
                                 description={product.description}
                                 imageUrls={product.imageUrls}
+                                href={`/shop/${product.id}`}
                             />
                             {product.stockQuantity !== undefined &&
                               product.stockQuantity <= 5 &&
