@@ -1,6 +1,6 @@
 # STATE: Ca' Del Friul — Frontend
 
-**Updated:** 2026-08-03 — after quick task 260803-dwf
+**Updated:** 2026-08-03 — after quick task 260803-gim
 
 ## Project Reference
 
@@ -79,6 +79,7 @@
 | 260731-mi2 | Refactor the Product Detail Page (PDP) at app/[locale]/shop/[id]/page.tsx to fetch actual data from the Spring Boot API instead of using the mock data | 2026-07-31 | `1eea998`, `f0b1a60`, `27f91ed` | [260731-mi2-refactor-the-product-detail-page-pdp-at-](./quick/260731-mi2-refactor-the-product-detail-page-pdp-at-/) |
 | 260731-n84 | Refine the image grid logic in the Product Detail Page to handle different numbers of images with Tailwind CSS (1: full-width h-[500px], 2: grid-cols-2, 3+: bento capped at 5, conditional Show all photos) | 2026-07-31 | `7568fe4`, `7b808c4` | [260731-n84-refine-the-image-grid-logic-in-the-produ](./quick/260731-n84-refine-the-image-grid-logic-in-the-produ/) |
 | 260803-dwf | Fix the image grid layout in the PDP so images display completely without aggressive cropping — natural-height scaling (remove fill, width/height 800, w-full h-auto rounded-xl object-cover, no forced heights), mobile carousel keeps fixed fill slides | 2026-08-03 | `b328f50`, `8a9d670` | [260803-dwf-please-fix-the-image-grid-layout-in-src-](./quick/260803-dwf-please-fix-the-image-grid-layout-in-src-/) |
+| 260803-gim | Build the Room Details Page at /rooms/{id} — bento gallery (natural height, preload), info column with capacity/amenities, sticky react-day-picker v10 calendar booking widget (past+booked disabled, strictly-between overlap validation, nights × price breakdown), auth-gated reservation (Log in to Reserve → safe ?redirect= round-trip; Reserve Now → POST /api/reservations/rooms → /dashboard), RoomCard links, pure booking helpers + unit tests, shadcn Calendar component | 2026-08-03 | `e86bcad`, `49c55da`, `b548277` | [260803-gim-please-build-the-room-details-page-app-l](./quick/260803-gim-please-build-the-room-details-page-app-l/) |
 
 ## Session Continuity
 
@@ -106,13 +107,14 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-08-03 — Completed quick task 260803-dwf: Fix the image grid layout in the PDP so images display completely without aggressive cropping (natural-height scaling — removed fill and fixed heights, w-full h-auto object-cover, priority→preload)
+**Last activity:** 2026-08-03 — Completed quick task 260803-gim: Build the Room Details Page with booking widget — bento gallery, sticky react-day-picker v10 calendar (past + booked disabled, strictly-between overlap validation with toast + reset), nights × price breakdown, auth-gated reserve (Log in to Reserve → /login?redirect=/rooms/{id}; Reserve Now → POST → /dashboard), RoomCard links, safe ?redirect= on login (Suspense-wrapped), pure booking helpers unit-tested, shadcn Calendar added; react-day-picker resolved to v10 (plan assumed v9 — adapted calendar to v10 classNames contract per current shadcn registry)
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
 - Consider adding payment gateway integration for checkout
 
 **Relevant context for next session:**
+- Quick task 260803-gim: Room Details page live at `/rooms/{id}` — bento gallery (width 1200 height 800, unoptimized, preload on first, zero priority), `lg:grid-cols-[1fr_380px]` with sticky booking Card; Calendar is react-day-picker **v10** (NOT v9 — classNames contract uses `month_caption`/`button_previous`/`button_next`/`month_grid`/`weekdays`/`week`/`day`/`day_button` + `selected`/`range_start`/`range_middle`/`range_end`; onSelect is `(selected, triggerDate, modifiers, e) => void`); pure helpers in `src/lib/roomBooking.ts` (`toDateKey`, `computeNights`, `findBlockedDate` — strictly-between overlap check); booking logic decisions: local-midnight date keys, manual overlap check (react-day-picker only disables endpoints), reset to `{ from }` + error toast, nights via `differenceInDays`, auth-gated button with no flash while `authLoading`, login honors safe `?redirect=` (Suspense-wrapped `useSearchParams`, same-origin-relative only). Reserve Now POSTs `{ roomId, checkInDate, checkOutDate }` to `/api/reservations/rooms` → success toast → `/dashboard`. RoomCard image overlay link (`z-[5]`) + title link; carousel buttons stay `z-10`.
 - Quick task 260731-dfc: `/experiences/e-bikes` live and static-prerendered — 3 mock e-bikes, selectable cards, date validation, reactive price summary, mock booking submit (toast + reset). `handleBook` handler is the seam for the Phase 3 booking engine/API. Note: lucide-react 1.23 exports `Bike` (not `Bicycle`).
 - 20 v1 requirements structurally complete — all placeholder pages in place
 - Quick task 260710-c3d: E-commerce implemented — `/shop` fetches products from API, `/cart` with quantity controls, `/checkout` with address selection and order placement (auth-gated), CartContext provides `addToCart`, `removeFromCart`, `updateQuantity`, `clearCart`, `cartTotal`, `itemCount` with localStorage persistence
