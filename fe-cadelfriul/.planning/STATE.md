@@ -1,6 +1,6 @@
 # STATE: Ca' Del Friul — Frontend
 
-**Updated:** 2026-08-03 — after quick task 260803-gim
+**Updated:** 2026-08-03 — after quick task 260803-j2w
 
 ## Project Reference
 
@@ -80,6 +80,7 @@
 | 260731-n84 | Refine the image grid logic in the Product Detail Page to handle different numbers of images with Tailwind CSS (1: full-width h-[500px], 2: grid-cols-2, 3+: bento capped at 5, conditional Show all photos) | 2026-07-31 | `7568fe4`, `7b808c4` | [260731-n84-refine-the-image-grid-logic-in-the-produ](./quick/260731-n84-refine-the-image-grid-logic-in-the-produ/) |
 | 260803-dwf | Fix the image grid layout in the PDP so images display completely without aggressive cropping — natural-height scaling (remove fill, width/height 800, w-full h-auto rounded-xl object-cover, no forced heights), mobile carousel keeps fixed fill slides | 2026-08-03 | `b328f50`, `8a9d670` | [260803-dwf-please-fix-the-image-grid-layout-in-src-](./quick/260803-dwf-please-fix-the-image-grid-layout-in-src-/) |
 | 260803-gim | Build the Room Details Page at /rooms/{id} — bento gallery (natural height, preload), info column with capacity/amenities, sticky react-day-picker v10 calendar booking widget (past+booked disabled, strictly-between overlap validation, nights × price breakdown), auth-gated reservation (Log in to Reserve → safe ?redirect= round-trip; Reserve Now → POST /api/reservations/rooms → /dashboard), RoomCard links, pure booking helpers + unit tests, shadcn Calendar component | 2026-08-03 | `e86bcad`, `49c55da`, `b548277` | [260803-gim-please-build-the-room-details-page-app-l](./quick/260803-gim-please-build-the-room-details-page-app-l/) |
+| 260803-j2w | Implement data fetching and dynamic rendering for the User Reservations dashboard page — client-side fetch GET /api/reservations/rooms/me via apiFetch (Bearer JWT), RoomReservationResponse interface + fetchMyRoomReservations added to API client, live reservation grid (room.name, shortened `RES-{UUID[:8]}` id, dates as-is, `€{totalPrice.toFixed(2)}`), dynamic status badges (CONFIRMED green / PENDING yellow / CANCELLED red), 3 loading skeleton cards, error state, empty state with "Explore our rooms" → /rooms | 2026-08-03 | `2afadd5`, `9f993db` | [260803-j2w-implement-the-data-fetching-and-dynamic-](./quick/260803-j2w-implement-the-data-fetching-and-dynamic-/) |
 
 ## Session Continuity
 
@@ -107,7 +108,7 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-08-03 — Completed quick task 260803-gim: Build the Room Details Page with booking widget — bento gallery, sticky react-day-picker v10 calendar (past + booked disabled, strictly-between overlap validation with toast + reset), nights × price breakdown, auth-gated reserve (Log in to Reserve → /login?redirect=/rooms/{id}; Reserve Now → POST → /dashboard), RoomCard links, safe ?redirect= on login (Suspense-wrapped), pure booking helpers unit-tested, shadcn Calendar added; react-day-picker resolved to v10 (plan assumed v9 — adapted calendar to v10 classNames contract per current shadcn registry)
+**Last activity:** 2026-08-03 — Completed quick task 260803-j2w: Reservations dashboard page now fetches live data from GET /api/reservations/rooms/me via the existing apiFetch client (Authorization Bearer auto-injected from the accessToken cookie; 401/403 → /login) — no hand-rolled fetch, raw `process.env.NEXT_PUBLIC_API_URL` superseded by API_BASE_URL convention. Added `RoomReservationResponse` (id, room{id,name}, userId, checkInDate, checkOutDate, totalPrice, status "CONFIRMED"|"PENDING"|"CANCELLED", createdAt, updatedAt) + `fetchMyRoomReservations()` to src/lib/api.ts; rewrote the page as `"use client"` cloning the orders-page cancelled-guard useEffect pattern, with 3 skeleton cards while loading, centered error state, empty state ("No reservations yet." + "Explore our rooms" → /rooms), and real cards (room.name, shortened `RES-{id[:8].toUpperCase()}`, dates as-is YYYY-MM-DD, `€{totalPrice.toFixed(2)}`, status pill switching green/yellow/red). Zero new dependencies; tsc + next build + 21/21 vitest green
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
