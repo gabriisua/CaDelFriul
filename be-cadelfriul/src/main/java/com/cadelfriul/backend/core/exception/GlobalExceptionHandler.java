@@ -35,6 +35,26 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Intercetta le prenotazioni non disponibili (overlap CONFIRMED o stanza archiviata).
+     * Restituisce 409 CONFLICT con il messaggio dell'eccezione.
+     */
+    @ExceptionHandler(RoomNotAvailableException.class)
+    public ResponseEntity<ApiErrorResponse> handleRoomNotAvailable(RoomNotAvailableException ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.CONFLICT;
+
+        ApiErrorResponse response = new ApiErrorResponse(
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                ex.getMessage(),
+                request.getDescription(false).replace("uri=", "")
+        );
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    /**
      * Intercetta TUTTO il resto. I veri errori 500 (NullPointerException, DB irraggiungibile).
      * Nasconde l'errore reale al cliente per sicurezza e restituisce un messaggio generico.
      */
