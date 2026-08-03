@@ -80,7 +80,7 @@ describe("Product Detail Page", () => {
     ).toBeNull();
   });
 
-  it("renders a single full-width 500px image for 1-image products", async () => {
+  it("renders a single full-width natural-height image for 1-image products", async () => {
     mockFetchProduct.mockResolvedValue({
       id: "p1",
       name: "Test Lavender Oil",
@@ -96,19 +96,25 @@ describe("Product Detail Page", () => {
     });
 
     const section = screen.getByLabelText(/photo gallery/i);
-    // Mobile carousel wrappers are h-[400px], so h-[500px] is desktop-only.
-    const wrapper = section.querySelector<HTMLElement>('[class*="h-[500px]"]');
-    expect(wrapper).not.toBeNull();
-    const imgs = wrapper?.querySelectorAll("img") ?? [];
+    // Mobile carousel imgs use fill (no h-auto in className), so this
+    // selector matches only natural-height (desktop gallery) images.
+    const imgs =
+      section.querySelectorAll<HTMLImageElement>('img[class*="h-auto"]');
     expect(imgs).toHaveLength(1);
-    expect(imgs[0]?.parentElement?.className).toContain("h-[500px]");
+    expect(imgs[0]?.className).toContain("w-full");
+    expect(imgs[0]?.className).toContain("h-auto");
+    expect(imgs[0]?.className).toContain("rounded-xl");
+    expect(imgs[0]?.className).toContain("object-cover");
+    expect(imgs[0]?.getAttribute("width")).toBe("800");
+    expect(imgs[0]?.getAttribute("height")).toBe("800");
     expect(imgs[0]?.parentElement?.className).toContain("rounded-xl");
+    expect(imgs[0]?.parentElement?.className).not.toContain("h-[500px]");
     expect(
       screen.queryByRole("button", { name: /show all photos/i })
     ).toBeNull();
   });
 
-  it("renders two 500px images side by side in a 2-column grid for 2-image products", async () => {
+  it("renders two natural-height images side by side in a 2-column grid for 2-image products", async () => {
     mockFetchProduct.mockResolvedValue({
       id: "p1",
       name: "Test Lavender Oil",
@@ -127,17 +133,21 @@ describe("Product Detail Page", () => {
     const grid = section.querySelector<HTMLElement>('[class*="grid-cols-2"]');
     expect(grid).not.toBeNull();
     expect(grid?.className).toContain("grid-cols-2");
-    const imgs = grid?.querySelectorAll("img") ?? [];
+    expect(grid?.className).not.toContain("h-[500px]");
+    const imgs =
+      grid?.querySelectorAll<HTMLImageElement>('img[class*="h-auto"]') ?? [];
     expect(imgs).toHaveLength(2);
     imgs.forEach((img) => {
-      expect(img.parentElement?.className).toContain("h-[500px]");
+      expect(img.className).toContain("h-auto");
+      expect(img.className).toContain("w-full");
+      expect(img.parentElement?.className).not.toContain("h-[500px]");
     });
     expect(
       screen.queryByRole("button", { name: /show all photos/i })
     ).toBeNull();
   });
 
-  it("renders a bento grid with a col-span-2 row-span-2 first image for 3-image products", async () => {
+  it("renders a bento grid with a natural-height col-span-2 row-span-2 first image for 3-image products", async () => {
     mockFetchProduct.mockResolvedValue({
       id: "p1",
       name: "Test Lavender Oil",
@@ -157,16 +167,21 @@ describe("Product Detail Page", () => {
     expect(grid).not.toBeNull();
     expect(grid?.className).toContain("grid-cols-3");
     expect(grid?.className).toContain("grid-rows-2");
+    expect(grid?.className).not.toContain("h-[500px]");
     const imgs = grid?.querySelectorAll("img") ?? [];
     expect(imgs).toHaveLength(3);
     expect(imgs[0]?.parentElement?.className).toContain("col-span-2");
     expect(imgs[0]?.parentElement?.className).toContain("row-span-2");
+    expect(imgs[0]?.parentElement?.className).not.toContain("h-[500px]");
+    imgs.forEach((img) => {
+      expect(img.className).toContain("h-auto");
+    });
     expect(
       screen.queryByRole("button", { name: /show all photos/i })
     ).toBeNull();
   });
 
-  it("caps the bento grid at 5 images and shows 'Show all photos' for 6-image products", async () => {
+  it("caps the bento grid at 5 natural-height images and shows 'Show all photos' for 6-image products", async () => {
     mockFetchProduct.mockResolvedValue({
       id: "p1",
       name: "Test Lavender Oil",
@@ -188,6 +203,7 @@ describe("Product Detail Page", () => {
     const grid = section.querySelector<HTMLElement>('[class*="grid-cols-4"]');
     expect(grid).not.toBeNull();
     expect(grid?.className).toContain("grid-cols-4");
+    expect(grid?.className).not.toContain("h-[500px]");
     expect(grid?.querySelectorAll("img")).toHaveLength(5);
     // Desktop + mobile each render the button once for 6+ images.
     expect(
