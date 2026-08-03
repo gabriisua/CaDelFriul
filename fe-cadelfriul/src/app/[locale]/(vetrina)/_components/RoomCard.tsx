@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Card,
@@ -44,6 +45,11 @@ export default function RoomCard({ room }: RoomCardProps) {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               onError={() => setImgSrc("/placeholder-room.jpg")}
             />
+            <Link
+              href={`/rooms/${room.id}`}
+              aria-label={`View ${room.name}`}
+              className="absolute inset-0 z-[5]"
+            />
             {room.imageUrls.length > 1 && (
               <>
                 <button
@@ -83,7 +89,12 @@ export default function RoomCard({ room }: RoomCardProps) {
       </div>
       <CardHeader>
         <CardTitle className="font-heading text-xl font-semibold">
-          {room.name}
+          <Link
+            href={`/rooms/${room.id}`}
+            className="transition-colors hover:text-accent"
+          >
+            {room.name}
+          </Link>
         </CardTitle>
         <CardDescription className="text-sm">
           {room.description}
