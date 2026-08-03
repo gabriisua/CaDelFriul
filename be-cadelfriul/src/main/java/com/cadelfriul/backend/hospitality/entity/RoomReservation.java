@@ -7,18 +7,19 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "room_bookings")
-public class RoomBooking {
+@Table(name = "room_reservations")
+public class RoomReservation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID roomId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id", nullable = false)
+    private Room room;
 
     @Column(nullable = false)
-    private String userEmail;
+    private String userId;
 
     @Column(nullable = false)
     private LocalDate checkInDate;
@@ -31,7 +32,7 @@ public class RoomBooking {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'PENDING'")
-    private BookingStatus status;
+    private ReservationStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -39,19 +40,19 @@ public class RoomBooking {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    public RoomBooking() {
+    public RoomReservation() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.status = BookingStatus.PENDING;
+        this.status = ReservationStatus.PENDING;
     }
 
     public UUID getId() { return id; }
 
-    public UUID getRoomId() { return roomId; }
-    public void setRoomId(UUID roomId) { this.roomId = roomId; }
+    public Room getRoom() { return room; }
+    public void setRoom(Room room) { this.room = room; }
 
-    public String getUserEmail() { return userEmail; }
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
     public LocalDate getCheckInDate() { return checkInDate; }
     public void setCheckInDate(LocalDate checkInDate) { this.checkInDate = checkInDate; }
@@ -62,8 +63,8 @@ public class RoomBooking {
     public BigDecimal getTotalPrice() { return totalPrice; }
     public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
 
-    public BookingStatus getStatus() { return status; }
-    public void setStatus(BookingStatus status) { this.status = status; }
+    public ReservationStatus getStatus() { return status; }
+    public void setStatus(ReservationStatus status) { this.status = status; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
 

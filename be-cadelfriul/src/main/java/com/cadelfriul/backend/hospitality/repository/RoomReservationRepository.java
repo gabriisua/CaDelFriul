@@ -1,0 +1,23 @@
+package com.cadelfriul.backend.hospitality.repository;
+
+import com.cadelfriul.backend.hospitality.entity.RoomReservation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
+
+public interface RoomReservationRepository extends JpaRepository<RoomReservation, UUID> {
+
+    List<RoomReservation> findByUserId(String userId);
+
+    @Query("SELECT r FROM RoomReservation r WHERE r.room.id = :roomId " +
+           "AND r.status = com.cadelfriul.backend.hospitality.entity.ReservationStatus.CONFIRMED " +
+           "AND r.checkInDate < :checkOutDate AND r.checkOutDate > :checkInDate")
+    List<RoomReservation> findOverlappingReservations(
+            @Param("roomId") UUID roomId,
+            @Param("checkInDate") LocalDate checkInDate,
+            @Param("checkOutDate") LocalDate checkOutDate);
+}

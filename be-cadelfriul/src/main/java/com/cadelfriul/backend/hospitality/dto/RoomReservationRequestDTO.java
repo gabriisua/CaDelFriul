@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class RoomBookingRequest {
+public class RoomReservationRequestDTO {
 
     @NotNull(message = "Room ID is required")
     private UUID roomId;
@@ -19,9 +19,6 @@ public class RoomBookingRequest {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate checkOutDate;
 
-    @NotNull(message = "User email is required")
-    private String userEmail;
-
     public UUID getRoomId() { return roomId; }
     public void setRoomId(UUID roomId) { this.roomId = roomId; }
 
@@ -30,7 +27,4 @@ public class RoomBookingRequest {
 
     public LocalDate getCheckOutDate() { return checkOutDate; }
     public void setCheckOutDate(LocalDate checkOutDate) { this.checkOutDate = checkOutDate; }
-
-    public String getUserEmail() { return userEmail; }
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
 }
