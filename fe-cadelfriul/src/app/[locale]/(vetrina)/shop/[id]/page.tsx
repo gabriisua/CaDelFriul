@@ -38,12 +38,14 @@ function GalleryImage({
   src,
   alt,
   className,
-  priority,
+  preload,
+  fillMode,
 }: {
   src: string;
   alt: string;
   className?: string;
-  priority?: boolean;
+  preload?: boolean;
+  fillMode?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   if (failed)
@@ -51,11 +53,25 @@ function GalleryImage({
       <div
         className={cn(
           "flex items-center justify-center bg-muted",
+          fillMode ? "h-full w-full" : "w-full aspect-video",
           className
         )}
       >
         <ImageOff className="size-10 text-muted-foreground/30" aria-hidden />
       </div>
+    );
+  if (!fillMode)
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={800}
+        height={800}
+        unoptimized
+        preload={preload}
+        className={cn("w-full h-auto rounded-xl object-cover", className)}
+        onError={() => setFailed(true)}
+      />
     );
   return (
     <Image
@@ -63,7 +79,7 @@ function GalleryImage({
       alt={alt}
       fill
       unoptimized
-      priority={priority}
+      preload={preload}
       className={cn("object-cover", className)}
       sizes="(max-width: 768px) 100vw, 50vw"
       onError={() => setFailed(true)}
@@ -199,7 +215,7 @@ export default function ProductDetailPage({
               {/* Desktop gallery */}
               <div className="relative hidden md:block">
                 {imgCount === 0 && (
-                  <div className="flex h-[500px] items-center justify-center rounded-xl bg-muted">
+                  <div className="flex aspect-video w-full items-center justify-center rounded-xl bg-muted">
                     <ImageOff
                       className="size-10 text-muted-foreground/30"
                       aria-hidden
@@ -208,22 +224,22 @@ export default function ProductDetailPage({
                 )}
 
                 {imgCount === 1 && (
-                  <div className="group relative h-[500px] overflow-hidden rounded-xl">
+                  <div className="group overflow-hidden rounded-xl">
                     <GalleryImage
                       src={fullImageUrls[0]}
                       alt={product.name}
-                      priority
+                      preload
                       className="transition duration-500 hover:scale-105 group-hover:brightness-110"
                     />
                   </div>
                 )}
 
                 {imgCount === 2 && (
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-4">
                     {fullImageUrls.map((img, i) => (
                       <div
                         key={img}
-                        className="group relative h-[500px] overflow-hidden rounded-xl"
+                        className="group overflow-hidden rounded-xl"
                       >
                         <GalleryImage
                           src={img}
@@ -232,7 +248,7 @@ export default function ProductDetailPage({
                               ? product.name
                               : `${product.name} photo ${i + 1}`
                           }
-                          priority={i === 0}
+                          preload={i === 0}
                           className="transition duration-500 hover:scale-105 group-hover:brightness-110"
                         />
                       </div>
@@ -243,7 +259,7 @@ export default function ProductDetailPage({
                 {imgCount >= 3 && (
                   <div
                     className={cn(
-                      "grid h-[500px] grid-rows-2 gap-2",
+                      "grid grid-rows-2 gap-4",
                       imgCount === 3 ? "grid-cols-3" : "grid-cols-4"
                     )}
                   >
@@ -251,7 +267,7 @@ export default function ProductDetailPage({
                       <div
                         key={img}
                         className={cn(
-                          "group relative overflow-hidden rounded-xl",
+                          "group overflow-hidden rounded-xl",
                           i === 0 && "col-span-2 row-span-2",
                           i === 3 && imgCount === 4 && "row-span-2"
                         )}
@@ -263,7 +279,7 @@ export default function ProductDetailPage({
                               ? product.name
                               : `${product.name} photo ${i + 1}`
                           }
-                          priority={i === 0}
+                          preload={i === 0}
                           className="transition duration-500 hover:scale-105 group-hover:brightness-110"
                         />
                       </div>
@@ -300,7 +316,8 @@ export default function ProductDetailPage({
                       <GalleryImage
                         src={img}
                         alt={`${product.name} photo ${i + 1}`}
-                        priority={i === 0}
+                        preload={i === 0}
+                        fillMode
                         className="transition duration-500 group-hover:brightness-110"
                       />
                     </div>
@@ -361,7 +378,7 @@ export default function ProductDetailPage({
                   {fullImageUrls.map((img, i) => (
                     <div
                       key={img}
-                      className="relative h-40 overflow-hidden rounded-lg md:h-56"
+                      className="overflow-hidden rounded-xl"
                     >
                       <GalleryImage
                         src={img}
