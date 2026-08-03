@@ -14,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.UUID;
 
 @Service
@@ -66,6 +69,29 @@ public class RoomReservationService {
 
         roomReservationRepository.save(reservation);
         return new RoomReservationResponseDTO(reservation);
+    }
+
+    @Transactional(readOnly = true)
+    public List<LocalDate> getBookedDates(UUID roomId) {
+        return expandBookedDates(roomReservationRepository.findByRoom_IdAndStatus(roomId, ReservationStatus.CONFIRMED));
+    }
+
+    /**
+     * Expands each reservation's [checkInDate, checkOutDate) range into its individual dates
+     * (check-in inclusive, check-out exclusive), de-duplicated and sorted ascending.
+     * Does not touch reservation.getRoom() — it is LAZY; the query already filtered by room.id.
+     */
+    static List<LocalDate> expandBookedDates(List<RoomReservation> reservations) {
+        TreeSet<LocalDate> bookedDates = new TreeSet<>();
+        for (RoomReservation reservation : reservations) {
+            LocalDate date = reservation.getCheckInDate();
+            LocalDate checkOutDate = reservation.getCheckOutDate();
+            long nights = ChronoUnit.DAYS.between(date, checkOutDate);
+            for (long i = 0; i < nights; i++) {
+                bookedDates.add(date.plusDays(i));
+            }
+        }
+        return new ArrayList<>(bookedDates);
     }
 
     @Transactional(readOnly = true)

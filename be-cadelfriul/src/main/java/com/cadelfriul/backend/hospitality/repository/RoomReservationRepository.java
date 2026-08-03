@@ -1,5 +1,6 @@
 package com.cadelfriul.backend.hospitality.repository;
 
+import com.cadelfriul.backend.hospitality.entity.ReservationStatus;
 import com.cadelfriul.backend.hospitality.entity.RoomReservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,8 @@ import java.util.UUID;
 public interface RoomReservationRepository extends JpaRepository<RoomReservation, UUID> {
 
     List<RoomReservation> findByUserId(String userId);
+
+    List<RoomReservation> findByRoom_IdAndStatus(UUID roomId, ReservationStatus status);
 
     @Query("SELECT r FROM RoomReservation r WHERE r.room.id = :roomId " +
            "AND r.status = com.cadelfriul.backend.hospitality.entity.ReservationStatus.CONFIRMED " +
