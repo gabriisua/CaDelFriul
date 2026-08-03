@@ -50,9 +50,6 @@ public class SecurityConfig {
                         // --- ENDPOINT PUBBLICI STANZE ---
                         .requestMatchers("/api/rooms/**").permitAll()
 
-                        // --- ENDPOINT PUBBLICI PRENOTAZIONI ---
-                        .requestMatchers("/api/bookings/**").permitAll()
-
                         // --- ENDPOINT WEBHOOK STRIPE ---
                         .requestMatchers("/api/webhooks/**").permitAll()
 
