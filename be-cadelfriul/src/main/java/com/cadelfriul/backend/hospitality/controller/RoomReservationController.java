@@ -1,9 +1,12 @@
 package com.cadelfriul.backend.hospitality.controller;
 
+import com.cadelfriul.backend.ecommerce.service.StripePaymentService;
 import com.cadelfriul.backend.hospitality.dto.RoomReservationRequestDTO;
 import com.cadelfriul.backend.hospitality.dto.RoomReservationResponseDTO;
 import com.cadelfriul.backend.hospitality.entity.ReservationStatus;
 import com.cadelfriul.backend.hospitality.service.RoomReservationService;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,16 +28,31 @@ import java.util.UUID;
 public class RoomReservationController {
 
     private final RoomReservationService roomReservationService;
+    private final StripePaymentService stripePaymentService;
 
-    public RoomReservationController(RoomReservationService roomReservationService) {
+    public RoomReservationController(RoomReservationService roomReservationService, StripePaymentService stripePaymentService) {
         this.roomReservationService = roomReservationService;
+        this.stripePaymentService = stripePaymentService;
     }
 
     @PostMapping
     @Operation(summary = "Create a reservation")
     public ResponseEntity<RoomReservationResponseDTO> createReservation(@Valid @RequestBody RoomReservationRequestDTO request) {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.status(HttpStatus.CREATED).body(roomReservationService.createReservation(request, userId));
+        RoomReservationResponseDTO dto = roomReservationService.createReservation(request, userId);
+
+        try {
+            Session session = stripePaymentService.createRoomReservationCheckoutSession(
+                    dto.getId(),
+                    dto.getRoom().getName(),
+                    dto.getTotalPrice());
+            dto.setStripeCheckoutUrl(session.getUrl());
+        } catch (StripeException e) {
+            roomReservationService.cancelReservation(dto.getId());
+            throw new RuntimeException("Failed to create Stripe checkout session: " + e.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
     @GetMapping("/me")

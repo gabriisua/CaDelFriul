@@ -118,4 +118,15 @@ public class RoomReservationService {
         roomReservationRepository.save(reservation);
         return new RoomReservationResponseDTO(reservation);
     }
+
+    public boolean cancelReservation(UUID reservationId) {
+        return roomReservationRepository.findById(reservationId)
+                .map(reservation -> {
+                    reservation.setStatus(ReservationStatus.CANCELLED);
+                    reservation.setUpdatedAt(LocalDateTime.now());
+                    roomReservationRepository.save(reservation);
+                    return true;
+                })
+                .orElse(false);
+    }
 }

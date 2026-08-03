@@ -92,6 +92,52 @@ class RoomReservationResponseDTOTest {
         }
     }
 
+    @Test
+    void stripeCheckoutUrl_defaultsToNull() {
+        UUID roomId = UUID.randomUUID();
+        Room room = new Room();
+        room.setName("Camera Panoramica");
+        room.setPricePerNight(new BigDecimal("120.00"));
+        room.setCapacity(2);
+        setField(room, "id", roomId);
+
+        RoomReservation reservation = new RoomReservation();
+        reservation.setRoom(room);
+        reservation.setUserId("guest@example.com");
+        reservation.setCheckInDate(LocalDate.of(2026, 8, 10));
+        reservation.setCheckOutDate(LocalDate.of(2026, 8, 13));
+        reservation.setTotalPrice(new BigDecimal("360.00"));
+        reservation.setStatus(ReservationStatus.PENDING);
+
+        RoomReservationResponseDTO response = new RoomReservationResponseDTO(reservation);
+
+        assertNull(response.getStripeCheckoutUrl());
+    }
+
+    @Test
+    void stripeCheckoutUrl_setGetRoundTrip() {
+        UUID roomId = UUID.randomUUID();
+        Room room = new Room();
+        room.setName("Camera Panoramica");
+        room.setPricePerNight(new BigDecimal("120.00"));
+        room.setCapacity(2);
+        setField(room, "id", roomId);
+
+        RoomReservation reservation = new RoomReservation();
+        reservation.setRoom(room);
+        reservation.setUserId("guest@example.com");
+        reservation.setCheckInDate(LocalDate.of(2026, 8, 10));
+        reservation.setCheckOutDate(LocalDate.of(2026, 8, 13));
+        reservation.setTotalPrice(new BigDecimal("360.00"));
+        reservation.setStatus(ReservationStatus.PENDING);
+
+        RoomReservationResponseDTO response = new RoomReservationResponseDTO(reservation);
+
+        response.setStripeCheckoutUrl("https://checkout.stripe.com/c/pay/test_123");
+
+        assertEquals("https://checkout.stripe.com/c/pay/test_123", response.getStripeCheckoutUrl());
+    }
+
     // --- helpers ---
 
     private void setField(Object target, String fieldName, Object value) {

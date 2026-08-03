@@ -19,6 +19,7 @@ public class RoomReservationResponseDTO {
     private final ReservationStatus status;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
+    private String stripeCheckoutUrl;
 
     public RoomReservationResponseDTO(RoomReservation reservation) {
         this.id = reservation.getId();
@@ -41,4 +42,6 @@ public class RoomReservationResponseDTO {
     public ReservationStatus getStatus() { return status; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public String getStripeCheckoutUrl() { return stripeCheckoutUrl; }
+    public void setStripeCheckoutUrl(String stripeCheckoutUrl) { this.stripeCheckoutUrl = stripeCheckoutUrl; }
 }
