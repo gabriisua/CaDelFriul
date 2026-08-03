@@ -8,6 +8,8 @@ import com.cadelfriul.backend.hospitality.entity.Room;
 import com.cadelfriul.backend.hospitality.entity.RoomReservation;
 import com.cadelfriul.backend.hospitality.repository.RoomReservationRepository;
 import com.cadelfriul.backend.hospitality.repository.RoomRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,11 +105,8 @@ public class RoomReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<RoomReservationResponseDTO> getAllReservations() {
-        return roomReservationRepository.findAll()
-                .stream()
-                .map(RoomReservationResponseDTO::new)
-                .toList();
+    public Page<RoomReservationResponseDTO> getAllReservations(Pageable pageable) {
+        return roomReservationRepository.findAll(pageable).map(RoomReservationResponseDTO::new);
     }
 
     public RoomReservationResponseDTO updateReservationStatus(UUID id, ReservationStatus status) {
