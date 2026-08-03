@@ -2,6 +2,7 @@ package com.cadelfriul.backend.hospitality.controller;
 
 import com.cadelfriul.backend.core.service.FileStorageService;
 import com.cadelfriul.backend.hospitality.dto.RoomResponse;
+import com.cadelfriul.backend.hospitality.service.RoomReservationService;
 import com.cadelfriul.backend.hospitality.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,10 +25,12 @@ public class PublicRoomController {
 
     private final RoomService roomService;
     private final FileStorageService fileStorageService;
+    private final RoomReservationService roomReservationService;
 
-    public PublicRoomController(RoomService roomService, FileStorageService fileStorageService) {
+    public PublicRoomController(RoomService roomService, FileStorageService fileStorageService, RoomReservationService roomReservationService) {
         this.roomService = roomService;
         this.fileStorageService = fileStorageService;
+        this.roomReservationService = roomReservationService;
     }
 
     @GetMapping
@@ -39,6 +43,13 @@ public class PublicRoomController {
     @Operation(summary = "Get room by ID", description = "Get a single room by its ID")
     public ResponseEntity<RoomResponse> getRoomById(@PathVariable UUID id) {
         return ResponseEntity.ok(roomService.getRoomById(id));
+    }
+
+    @GetMapping("/{roomId}/booked-dates")
+    @Operation(summary = "Get booked dates for a room",
+              description = "Flat list of dates blocked by CONFIRMED reservations (check-in inclusive, check-out exclusive), sorted and de-duplicated")
+    public ResponseEntity<List<LocalDate>> getBookedDates(@PathVariable UUID roomId) {
+        return ResponseEntity.ok(roomReservationService.getBookedDates(roomId));
     }
 
     /**
