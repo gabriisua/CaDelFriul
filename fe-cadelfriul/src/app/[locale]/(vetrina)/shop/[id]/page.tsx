@@ -123,6 +123,8 @@ export default function ProductDetailPage({
     [product]
   );
 
+  const imgCount = fullImageUrls.length;
+
   const maxQuantity =
     product?.stockQuantity ?? Number.MAX_SAFE_INTEGER;
 
@@ -194,10 +196,19 @@ export default function ProductDetailPage({
           {/* Left column: image gallery */}
           <section aria-label={`${product.name} photo gallery (${id})`}>
             <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-              {/* Desktop bento grid */}
-              <div className="relative hidden md:grid gap-2 md:grid-cols-[2fr_1fr]">
-                {fullImageUrls.length === 1 ? (
-                  <div className="group relative h-[600px] overflow-hidden rounded-xl">
+              {/* Desktop gallery */}
+              <div className="relative hidden md:block">
+                {imgCount === 0 && (
+                  <div className="flex h-[500px] items-center justify-center rounded-xl bg-muted">
+                    <ImageOff
+                      className="size-10 text-muted-foreground/30"
+                      aria-hidden
+                    />
+                  </div>
+                )}
+
+                {imgCount === 1 && (
+                  <div className="group relative h-[500px] overflow-hidden rounded-xl">
                     <GalleryImage
                       src={fullImageUrls[0]}
                       alt={product.name}
@@ -205,47 +216,74 @@ export default function ProductDetailPage({
                       className="transition duration-500 hover:scale-105 group-hover:brightness-110"
                     />
                   </div>
-                ) : (
-                  <>
-                    <div className="group relative h-[600px] overflow-hidden rounded-xl">
-                      <GalleryImage
-                        src={fullImageUrls[0]}
-                        alt={product.name}
-                        priority
-                        className="transition duration-500 hover:scale-105 group-hover:brightness-110"
-                      />
-                    </div>
-                    <div
-                      className={cn(
-                        "grid gap-2",
-                        fullImageUrls.length === 2
-                          ? "grid-cols-1"
-                          : "grid-cols-2"
-                      )}
-                    >
-                      {fullImageUrls.slice(1).map((img, i) => (
-                        <div
-                          key={img}
-                          className="group relative h-[290px] overflow-hidden rounded-xl"
-                        >
-                          <GalleryImage
-                            src={img}
-                            alt={`${product.name} photo ${i + 2}`}
-                            className="transition duration-500 hover:scale-105 group-hover:brightness-110"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </>
                 )}
-                <button
-                  type="button"
-                  onClick={() => setLightboxOpen(true)}
-                  className="absolute bottom-4 right-4 z-20 rounded-full bg-black/60 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-black/75"
-                >
-                  <Images className="mr-1.5 inline-block size-4" aria-hidden />
-                  Show all photos
-                </button>
+
+                {imgCount === 2 && (
+                  <div className="grid grid-cols-2 gap-2">
+                    {fullImageUrls.map((img, i) => (
+                      <div
+                        key={img}
+                        className="group relative h-[500px] overflow-hidden rounded-xl"
+                      >
+                        <GalleryImage
+                          src={img}
+                          alt={
+                            i === 0
+                              ? product.name
+                              : `${product.name} photo ${i + 1}`
+                          }
+                          priority={i === 0}
+                          className="transition duration-500 hover:scale-105 group-hover:brightness-110"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {imgCount >= 3 && (
+                  <div
+                    className={cn(
+                      "grid h-[500px] grid-rows-2 gap-2",
+                      imgCount === 3 ? "grid-cols-3" : "grid-cols-4"
+                    )}
+                  >
+                    {fullImageUrls.slice(0, 5).map((img, i) => (
+                      <div
+                        key={img}
+                        className={cn(
+                          "group relative overflow-hidden rounded-xl",
+                          i === 0 && "col-span-2 row-span-2",
+                          i === 3 && imgCount === 4 && "row-span-2"
+                        )}
+                      >
+                        <GalleryImage
+                          src={img}
+                          alt={
+                            i === 0
+                              ? product.name
+                              : `${product.name} photo ${i + 1}`
+                          }
+                          priority={i === 0}
+                          className="transition duration-500 hover:scale-105 group-hover:brightness-110"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {imgCount > 5 && (
+                  <button
+                    type="button"
+                    onClick={() => setLightboxOpen(true)}
+                    className="absolute bottom-4 right-4 z-20 rounded-full bg-black/60 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-black/75"
+                  >
+                    <Images
+                      className="mr-1.5 inline-block size-4"
+                      aria-hidden
+                    />
+                    Show all photos
+                  </button>
+                )}
               </div>
 
               {/* Mobile snap carousel */}
@@ -297,14 +335,19 @@ export default function ProductDetailPage({
                     />
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setLightboxOpen(true)}
-                  className="absolute bottom-4 right-4 z-20 rounded-full bg-black/60 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-black/75"
-                >
-                  <Images className="mr-1.5 inline-block size-4" aria-hidden />
-                  Show all photos
-                </button>
+                {imgCount > 5 && (
+                  <button
+                    type="button"
+                    onClick={() => setLightboxOpen(true)}
+                    className="absolute bottom-4 right-4 z-20 rounded-full bg-black/60 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition hover:bg-black/75"
+                  >
+                    <Images
+                      className="mr-1.5 inline-block size-4"
+                      aria-hidden
+                    />
+                    Show all photos
+                  </button>
+                )}
               </div>
 
               {/* Lightbox */}
