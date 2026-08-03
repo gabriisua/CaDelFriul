@@ -1,6 +1,6 @@
 # STATE: Ca' Del Friul — Frontend
 
-**Updated:** 2026-08-03 — after quick task 260731-n84
+**Updated:** 2026-08-03 — after quick task 260803-dwf
 
 ## Project Reference
 
@@ -78,6 +78,7 @@
 | 260731-lfb | Create a Product Detail Page (PDP) for the eco-resort shop using Next.js App Router and Tailwind CSS | 2026-07-31 | `027d6fb`, `6c6cdbc`, `a3fdd05` | [260731-lfb-create-a-product-detail-page-pdp-for-the](./quick/260731-lfb-create-a-product-detail-page-pdp-for-the/) |
 | 260731-mi2 | Refactor the Product Detail Page (PDP) at app/[locale]/shop/[id]/page.tsx to fetch actual data from the Spring Boot API instead of using the mock data | 2026-07-31 | `1eea998`, `f0b1a60`, `27f91ed` | [260731-mi2-refactor-the-product-detail-page-pdp-at-](./quick/260731-mi2-refactor-the-product-detail-page-pdp-at-/) |
 | 260731-n84 | Refine the image grid logic in the Product Detail Page to handle different numbers of images with Tailwind CSS (1: full-width h-[500px], 2: grid-cols-2, 3+: bento capped at 5, conditional Show all photos) | 2026-07-31 | `7568fe4`, `7b808c4` | [260731-n84-refine-the-image-grid-logic-in-the-produ](./quick/260731-n84-refine-the-image-grid-logic-in-the-produ/) |
+| 260803-dwf | Fix the image grid layout in the PDP so images display completely without aggressive cropping — natural-height scaling (remove fill, width/height 800, w-full h-auto rounded-xl object-cover, no forced heights), mobile carousel keeps fixed fill slides | 2026-08-03 | `b328f50`, `8a9d670` | [260803-dwf-please-fix-the-image-grid-layout-in-src-](./quick/260803-dwf-please-fix-the-image-grid-layout-in-src-/) |
 
 ## Session Continuity
 
@@ -105,7 +106,7 @@
 - `(dashboard)` route group conflicted with `(vetrina)` at `/` — moved to real `dashboard/` segment
 - `"use client"` added to contact page (onSubmit handler)
 
-**Last activity:** 2026-08-03 — Completed quick task 260731-n84: Refine the image grid logic in the Product Detail Page to handle different numbers of images (1 full-width h-[500px], 2 grid-cols-2, 3+ bento capped at 5) with object-cover and a conditional Show all photos button
+**Last activity:** 2026-08-03 — Completed quick task 260803-dwf: Fix the image grid layout in the PDP so images display completely without aggressive cropping (natural-height scaling — removed fill and fixed heights, w-full h-auto object-cover, priority→preload)
 
 **Next recommended step:**
 - Test e-commerce flow end-to-end with backend API (stock limits + shipping cost calculation)
