@@ -8,6 +8,8 @@ import com.cadelfriul.backend.hospitality.entity.Room;
 import com.cadelfriul.backend.hospitality.entity.RoomReservation;
 import com.cadelfriul.backend.hospitality.repository.RoomReservationRepository;
 import com.cadelfriul.backend.hospitality.repository.RoomRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ import java.util.UUID;
 @Service
 @Transactional
 public class RoomReservationService {
+
+    private static final Logger log = LoggerFactory.getLogger(RoomReservationService.class);
 
     private final RoomReservationRepository roomReservationRepository;
     private final RoomRepository roomRepository;
@@ -123,6 +127,30 @@ public class RoomReservationService {
         return roomReservationRepository.findById(reservationId)
                 .map(reservation -> {
                     reservation.setStatus(ReservationStatus.CANCELLED);
+                    reservation.setUpdatedAt(LocalDateTime.now());
+                    roomReservationRepository.save(reservation);
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    public boolean confirmReservationIfAvailable(UUID reservationId) {
+        return roomReservationRepository.findById(reservationId)
+                .map(reservation -> {
+                    List<RoomReservation> overlaps = roomReservationRepository.findOverlappingReservations(
+                            reservation.getRoom().getId(),
+                            reservation.getCheckInDate(),
+                            reservation.getCheckOutDate()
+                    );
+
+                    if (overlaps.isEmpty()) {
+                        reservation.setStatus(ReservationStatus.CONFIRMED);
+                    } else {
+                        reservation.setStatus(ReservationStatus.CANCELLED);
+                        log.warn("Reservation {} cancelled after payment: dates no longer available ({} CONFIRMED overlap(s))",
+                                reservationId, overlaps.size());
+                    }
+
                     reservation.setUpdatedAt(LocalDateTime.now());
                     roomReservationRepository.save(reservation);
                     return true;
