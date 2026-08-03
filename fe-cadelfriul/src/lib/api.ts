@@ -318,6 +318,18 @@ export interface RoomReservationRequest {
   checkOutDate: string; // "yyyy-MM-dd"
 }
 
+export interface RoomReservationResponse {
+  id: string; // UUID
+  room: { id: string; name: string };
+  userId: string;
+  checkInDate: string; // "YYYY-MM-DD"
+  checkOutDate: string; // "YYYY-MM-DD"
+  totalPrice: number; // BigDecimal serialized as JSON number
+  status: "CONFIRMED" | "PENDING" | "CANCELLED";
+  createdAt: string; // ISO datetime
+  updatedAt: string; // ISO datetime
+}
+
 export async function fetchRoom(id: string): Promise<Room> {
   return apiFetch<Room>(`/api/rooms/${id}`);
 }
@@ -333,6 +345,12 @@ export async function createRoomReservation(
     method: "POST",
     body: JSON.stringify(req),
   });
+}
+
+export async function fetchMyRoomReservations(): Promise<
+  RoomReservationResponse[]
+> {
+  return apiFetch<RoomReservationResponse[]>("/api/reservations/rooms/me");
 }
 
 export async function setDefaultShipping(
