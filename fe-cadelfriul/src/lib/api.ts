@@ -300,6 +300,7 @@ export interface Room {
   pricePerNight: number;
   amenities: string[];
   imageUrls: string[];
+  maxCapacity?: number;
 }
 
 export function getRoomImageUrl(imageUrl: string): string {
@@ -309,6 +310,29 @@ export function getRoomImageUrl(imageUrl: string): string {
 
 export async function fetchRooms(): Promise<Room[]> {
   return apiFetch<Room[]>("/api/rooms");
+}
+
+export interface RoomReservationRequest {
+  roomId: string;
+  checkInDate: string; // "yyyy-MM-dd"
+  checkOutDate: string; // "yyyy-MM-dd"
+}
+
+export async function fetchRoom(id: string): Promise<Room> {
+  return apiFetch<Room>(`/api/rooms/${id}`);
+}
+
+export async function fetchRoomBookedDates(id: string): Promise<string[]> {
+  return apiFetch<string[]>(`/api/rooms/${id}/booked-dates`);
+}
+
+export async function createRoomReservation(
+  req: RoomReservationRequest
+): Promise<unknown> {
+  return apiFetch<unknown>("/api/reservations/rooms", {
+    method: "POST",
+    body: JSON.stringify(req),
+  });
 }
 
 export async function setDefaultShipping(
