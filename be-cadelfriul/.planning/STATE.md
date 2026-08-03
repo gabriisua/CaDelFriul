@@ -1,7 +1,7 @@
 # Project State
 
 ## Last activity
-2026-08-03 - Completed quick task 260803-fdo: Implement Room Reservations backend (evolved RoomBooking domain into RoomReservation)
+2026-08-03 - Completed quick task 260803-g4r: Add public booked-dates endpoint for frontend calendar
 
 ## Quick Tasks Completed
 
@@ -17,3 +17,4 @@
 | 260721-o5n | Implement Room backend - entity, service, controllers, security for hospitality module | 2026-07-21 | 106be63 | [260721-o5n-implement-the-backend-logic-for-the-room](./quick/260721-o5n-implement-the-backend-logic-for-the-room/) |
 | 260721-ow2 | Refactor File Storage to Use Dynamic Nested Structure | 2026-07-21 | 1eff120, b9fb24d, 01c53d5 | [260721-ow2-refactor-file-storage-to-use-dynamic-nes](./quick/260721-ow2-refactor-file-storage-to-use-dynamic-nes/) |
 | 260803-fdo | Implement Room Reservations backend - rename RoomBooking to RoomReservation, @ManyToOne Room, /me endpoint, 409 on overlap | 2026-08-03 | 9d3e3c9, 5943413, 2ede95e | [260803-fdo-please-implement-the-spring-boot-backend](./quick/260803-fdo-please-implement-the-spring-boot-backend/) |
+| 260803-g4r | Add public GET /api/rooms/{roomId}/booked-dates endpoint for frontend calendar | 2026-08-03 | ced4cbe, e944a33, e3ea75b | [260803-g4r-add-a-public-endpoint-to-support-the-fro](./quick/260803-g4r-add-a-public-endpoint-to-support-the-fro/) |
