@@ -1,6 +1,6 @@
 # Project State
 
-**Last Updated:** 2026-07-23
+**Last Updated:** 2026-08-04
 
 ## Project Overview
 CaDelFriul — multi-module hospitality platform (Spring Boot backend + Angular backoffice + Next.js frontend)
@@ -21,7 +21,8 @@ Implementation
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260723-001 | Room Booking backend (entity, repository, DTOs, service, controllers) | 2026-07-23 | 5cd6d9a | [260723-001-room-booking-backend](./quick/260723-001-room-booking-backend/) |
+| 260804-fsq | Implement Admin Reservations Management view in Angular Backoffice (bo-cadelfriul) | 2026-08-04 | 97b07f9 | [260804-fsq-implement-admin-reservations-management-](./quick/260804-fsq-implement-admin-reservations-management-/) |
 
 ### Blockers/Concerns
 
-Last activity: 2026-07-23 - Started quick task 260723-001: Room Booking backend
+Last activity: 2026-08-04 - Completed quick task 260804-fsq: Implement Admin Reservations Management view in Angular Backoffice (bo-cadelfriul)
