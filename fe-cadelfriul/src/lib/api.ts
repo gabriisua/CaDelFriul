@@ -359,6 +359,14 @@ export async function fetchMyRoomReservations(): Promise<
   return apiFetch<RoomReservationResponse[]>("/api/reservations/rooms/me");
 }
 
+export interface CustomerDashboardResponse {
+  upcomingReservation: RoomReservationResponse | null;
+  activeOrdersCount: number;
+  savedAddressesCount: number;
+}
+
+export async function fetchCustomerDashboard(): Promise<CustomerDashboardResponse> { return apiFetch<CustomerDashboardResponse>("/api/customers/me/dashboard"); }
+
 export async function setDefaultShipping(
   customerId: string,
   addressId: string
