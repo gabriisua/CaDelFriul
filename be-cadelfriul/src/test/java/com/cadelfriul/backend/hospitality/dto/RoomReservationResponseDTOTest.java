@@ -45,6 +45,7 @@ class RoomReservationResponseDTOTest {
         assertEquals(reservationId, response.getId());
         assertEquals(roomId, response.getRoom().getId());
         assertEquals("guest@example.com", response.getUserId());
+        assertEquals("guest@example.com", response.getCustomerEmail());
         assertEquals(checkInDate, response.getCheckInDate());
         assertEquals(checkOutDate, response.getCheckOutDate());
         assertEquals(new BigDecimal("360.00"), response.getTotalPrice());
@@ -77,6 +78,29 @@ class RoomReservationResponseDTOTest {
         assertEquals("Camera Panoramica", response.getRoom().getName());
         assertEquals(new BigDecimal("120.00"), response.getRoom().getPricePerNight());
         assertEquals(2, response.getRoom().getCapacity());
+    }
+
+    @Test
+    void customerEmail_mirrorsUserId_whichStoresTheEmail() {
+        UUID roomId = UUID.randomUUID();
+        Room room = new Room();
+        room.setName("Camera Panoramica");
+        room.setPricePerNight(new BigDecimal("120.00"));
+        room.setCapacity(2);
+        setField(room, "id", roomId);
+
+        RoomReservation reservation = new RoomReservation();
+        reservation.setRoom(room);
+        reservation.setUserId("guest@example.com");
+        reservation.setCheckInDate(LocalDate.of(2026, 8, 10));
+        reservation.setCheckOutDate(LocalDate.of(2026, 8, 13));
+        reservation.setTotalPrice(new BigDecimal("360.00"));
+        reservation.setStatus(ReservationStatus.PENDING);
+
+        RoomReservationResponseDTO response = new RoomReservationResponseDTO(reservation);
+
+        assertEquals("guest@example.com", response.getCustomerEmail());
+        assertEquals(response.getUserId(), response.getCustomerEmail());
     }
 
     @Test

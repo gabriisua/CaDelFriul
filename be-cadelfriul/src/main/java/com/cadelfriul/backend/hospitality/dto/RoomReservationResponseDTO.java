@@ -13,6 +13,7 @@ public class RoomReservationResponseDTO {
     private final UUID id;
     private final RoomResponse room;
     private final String userId;
+    private final String customerEmail;
     private final LocalDate checkInDate;
     private final LocalDate checkOutDate;
     private final BigDecimal totalPrice;
@@ -25,6 +26,7 @@ public class RoomReservationResponseDTO {
         this.id = reservation.getId();
         this.room = new RoomResponse(reservation.getRoom());
         this.userId = reservation.getUserId();
+        this.customerEmail = reservation.getUserId();
         this.checkInDate = reservation.getCheckInDate();
         this.checkOutDate = reservation.getCheckOutDate();
         this.totalPrice = reservation.getTotalPrice();
@@ -36,6 +38,7 @@ public class RoomReservationResponseDTO {
     public UUID getId() { return id; }
     public RoomResponse getRoom() { return room; }
     public String getUserId() { return userId; }
+    public String getCustomerEmail() { return customerEmail; }
     public LocalDate getCheckInDate() { return checkInDate; }
     public LocalDate getCheckOutDate() { return checkOutDate; }
     public BigDecimal getTotalPrice() { return totalPrice; }
