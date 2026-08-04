@@ -42,6 +42,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'reservations',
+        loadComponent: () =>
+          import('./features/reservations/reservations-management.component').then(
+            (m) => m.ReservationsManagementComponent,
+          ),
+      },
+      {
         path: 'customers',
         loadComponent: () =>
           import('./features/customers/customers.component').then(

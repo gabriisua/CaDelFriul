@@ -65,6 +65,7 @@ export class AdminLayoutComponent {
   readonly navItems = [
     { path: '/dashboard', label: 'Dashboard' },
     { path: '/orders', label: 'Orders' },
+    { path: '/reservations', label: 'Reservations' },
     { path: '/products', label: 'Products' },
     { path: '/rooms', label: 'Rooms' },
     { path: '/customers', label: 'Customers' },
