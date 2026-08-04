@@ -9,11 +9,15 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface RoomReservationRepository extends JpaRepository<RoomReservation, UUID> {
 
     List<RoomReservation> findByUserId(String userId);
+
+    Optional<RoomReservation> findFirstByUserIdAndStatusAndCheckInDateGreaterThanEqualOrderByCheckInDateAsc(
+            String userId, ReservationStatus status, LocalDate checkInDate);
 
     List<RoomReservation> findByRoom_IdAndStatus(UUID roomId, ReservationStatus status);
 

@@ -1,6 +1,7 @@
 package com.cadelfriul.backend.ecommerce.repository;
 
 import com.cadelfriul.backend.ecommerce.entity.Order;
+import com.cadelfriul.backend.ecommerce.entity.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +12,8 @@ import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findByCustomerId(UUID customerId);
+
+    long countByCustomerIdAndStatusNotIn(UUID customerId, List<OrderStatus> statuses);
     List<Order> findByCustomerIdOrderByCreatedAtDesc(UUID customerId);
     Optional<Order> findByStripeSessionId(String stripeSessionId);
 
