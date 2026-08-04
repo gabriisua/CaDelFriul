@@ -128,6 +128,12 @@ export interface Order {
   items: OrderItem[];
 }
 
+export interface CreateRoomReservationResponse {
+  id: string;
+  status: "CONFIRMED" | "PENDING" | "CANCELLED";
+  stripeCheckoutUrl?: string; // The crucial link for Stripe
+}
+
 export async function fetchProducts(): Promise<Product[]> {
   return apiFetch<Product[]>("/api/products");
 }
@@ -339,9 +345,9 @@ export async function fetchRoomBookedDates(id: string): Promise<string[]> {
 }
 
 export async function createRoomReservation(
-  req: RoomReservationRequest
-): Promise<unknown> {
-  return apiFetch<unknown>("/api/reservations/rooms", {
+    req: RoomReservationRequest
+): Promise<CreateRoomReservationResponse> {
+  return apiFetch<CreateRoomReservationResponse>("/api/reservations/rooms", {
     method: "POST",
     body: JSON.stringify(req),
   });

@@ -38,7 +38,9 @@ export default function ReservationsPage() {
         setError(null);
         const data = await fetchMyRoomReservations();
         if (!cancelled) {
-          setReservations(data);
+          // Filtra via le prenotazioni CANCELLED prima di salvarle nello stato
+          const filteredData = data.filter((res) => res.status !== "CANCELLED");
+          setReservations(filteredData);
         }
       } catch {
         if (!cancelled) {

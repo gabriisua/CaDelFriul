@@ -171,25 +171,30 @@ export default function RoomDetailPage({
     if (!selected?.from || !selected?.to || !room || submitting) return;
     setSubmitting(true);
     try {
-      await createRoomReservation({
+      const response = await createRoomReservation({
         roomId: room.id,
         checkInDate: toDateKey(selected.from),
         checkOutDate: toDateKey(selected.to),
       });
-      toast.success("Reservation confirmed!");
-      router.push("/dashboard");
+
+      if (response.stripeCheckoutUrl) {
+        toast.success("Redirecting to secure checkout...");
+        window.location.href = response.stripeCheckoutUrl;
+      } else {
+        toast.success("Reservation confirmed!");
+        router.push("/dashboard/reservations");
+      }
     } catch (err) {
       let message: string | null = null;
       if (err instanceof AuthError) {
         const body = err.body as Record<string, unknown> | null;
         message =
-          body && typeof body === "object" && "message" in body
-            ? String((body as { message: string }).message)
-            : null;
+            body && typeof body === "object" && "message" in body
+                ? String((body as { message: string }).message)
+                : null;
       }
       toast.error(message || "Failed to create reservation. Please try again.");
-    } finally {
-      setSubmitting(false);
+      setSubmitting(false); // Only set false if there's an error, otherwise we want it to stay disabled during redirect.
     }
   };
 

@@ -19,15 +19,14 @@ export class ReservationService {
       .pipe(map((page) => page.content));
   }
 
-  updateReservationStatus(
-    id: string,
-    status: AdminRoomReservationStatus,
-  ): Observable<AdminRoomReservationResponse> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.put<AdminRoomReservationResponse>(
-      `${this.baseUrl}/${id}/status`,
-      status,
-      { headers },
+  updateReservationStatus(id: string, status: string): Observable<any> {
+    // JSON.stringify trasforma 'CANCELLED' in '"CANCELLED"'
+    return this.http.put(
+      `${environment.apiUrl}/api/reservations/rooms/${id}/status`,
+      JSON.stringify(status),
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
     );
   }
 }
