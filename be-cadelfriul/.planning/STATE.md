@@ -1,7 +1,7 @@
 # Project State
 
 ## Last activity
-2026-08-04 - Completed quick task 260804-fit: Admin room reservation endpoints (customerEmail on DTO + default createdAt desc ordering)
+2026-08-04 - Completed quick task 260804-knm: Automated scheduled task to cancel orphaned PENDING room reservations (30-min expiry, 15-min interval)
 
 ## Quick Tasks Completed
 
@@ -20,3 +20,4 @@
 | 260803-g4r | Add public GET /api/rooms/{roomId}/booked-dates endpoint for frontend calendar | 2026-08-03 | ced4cbe, e944a33, e3ea75b | [260803-g4r-add-a-public-endpoint-to-support-the-fro](./quick/260803-g4r-add-a-public-endpoint-to-support-the-fro/) |
 | 260803-kqg | Admin room reservation endpoints + Stripe Checkout with webhooks (CONFIRMED/CANCELLED transitions) | 2026-08-03 | 7e3339b, 3d0894e, 7f75f53 | [260803-kqg-implement-admin-endpoints-for-room-reser](./quick/260803-kqg-implement-admin-endpoints-for-room-reser/) |
 | 260804-fit | Admin room reservation endpoints (customerEmail on DTO + default createdAt desc ordering) | 2026-08-04 | d808753, 319efc4 | [260804-fit-implement-admin-endpoints-for-managing-r](./quick/260804-fit-implement-admin-endpoints-for-managing-r/) |
+| 260804-knm | Automated scheduled task to cancel orphaned PENDING room reservations (30-min expiry, 15-min interval) | 2026-08-04 | 35b9331, e38ce3c | [260804-knm-implement-an-automated-scheduled-task-in](./quick/260804-knm-implement-an-automated-scheduled-task-in/) |
