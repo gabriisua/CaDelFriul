@@ -11,7 +11,9 @@ import com.cadelfriul.backend.hospitality.repository.RoomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,7 +112,19 @@ public class RoomReservationService {
 
     @Transactional(readOnly = true)
     public Page<RoomReservationResponseDTO> getAllReservations(Pageable pageable) {
-        return roomReservationRepository.findAll(pageable).map(RoomReservationResponseDTO::new);
+        return roomReservationRepository.findAll(applyDefaultSortIfUnsorted(pageable)).map(RoomReservationResponseDTO::new);
+    }
+
+    /**
+     * Applies a default createdAt DESC (newest-first) sort when the client sent no explicit
+     * sort; an explicitly supplied sort is passed through untouched. Page number and size are
+     * preserved (Pageable.withSort is not part of the Pageable contract in Spring Data Commons
+     * 4.1.0, so a fresh PageRequest with the same page/size is built instead).
+     */
+    static Pageable applyDefaultSortIfUnsorted(Pageable pageable) {
+        return pageable.getSort().isUnsorted()
+                ? PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "createdAt"))
+                : pageable;
     }
 
     public RoomReservationResponseDTO updateReservationStatus(UUID id, ReservationStatus status) {

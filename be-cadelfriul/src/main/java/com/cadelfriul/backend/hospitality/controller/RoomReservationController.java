@@ -65,7 +65,7 @@ public class RoomReservationController {
     @GetMapping
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @Operation(summary = "List all reservations (admin)",
-            description = "Paginated admin listing. Query params: ?page=0&size=20&sort=createdAt,desc")
+            description = "Paginated admin listing (newest first by default). Query params: ?page=0&size=20&sort=createdAt,desc")
     public ResponseEntity<Page<RoomReservationResponseDTO>> getAllReservations(@PageableDefault(size = 20) Pageable pageable) {
         return ResponseEntity.ok(roomReservationService.getAllReservations(pageable));
     }

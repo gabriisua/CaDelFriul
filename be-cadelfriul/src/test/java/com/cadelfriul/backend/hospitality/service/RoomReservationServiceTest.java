@@ -3,6 +3,9 @@ package com.cadelfriul.backend.hospitality.service;
 import com.cadelfriul.backend.hospitality.entity.ReservationStatus;
 import com.cadelfriul.backend.hospitality.entity.RoomReservation;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -62,6 +65,25 @@ class RoomReservationServiceTest {
     @Test
     void expandDates_emptyList_returnsEmptyList() {
         assertTrue(RoomReservationService.expandBookedDates(List.of()).isEmpty());
+    }
+
+    @Test
+    void getAllReservations_unsortedPageable_defaultsToCreatedAtDesc() {
+        Pageable result = RoomReservationService.applyDefaultSortIfUnsorted(PageRequest.of(0, 20));
+
+        assertEquals(Sort.by(Sort.Direction.DESC, "createdAt"), result.getSort());
+        assertEquals(0, result.getPageNumber());
+        assertEquals(20, result.getPageSize());
+    }
+
+    @Test
+    void getAllReservations_explicitSort_isPreserved() {
+        Sort explicit = Sort.by(Sort.Direction.ASC, "totalPrice");
+        Pageable result = RoomReservationService.applyDefaultSortIfUnsorted(PageRequest.of(0, 20, explicit));
+
+        assertEquals(explicit, result.getSort());
+        assertEquals(0, result.getPageNumber());
+        assertEquals(20, result.getPageSize());
     }
 
     // --- helpers ---
