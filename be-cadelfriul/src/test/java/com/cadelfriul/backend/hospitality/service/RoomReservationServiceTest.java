@@ -8,9 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RoomReservationServiceTest {
@@ -84,6 +86,21 @@ class RoomReservationServiceTest {
         assertEquals(explicit, result.getSort());
         assertEquals(0, result.getPageNumber());
         assertEquals(20, result.getPageSize());
+    }
+
+    @Test
+    void expireReservation_setsStatusToCancelled() {
+        RoomReservation reservation = new RoomReservation();
+        RoomReservationService.expireReservation(reservation);
+        assertEquals(ReservationStatus.CANCELLED, reservation.getStatus());
+    }
+
+    @Test
+    void expireReservation_setsUpdatedAtToNow() {
+        RoomReservation reservation = new RoomReservation();
+        RoomReservationService.expireReservation(reservation);
+        assertFalse(reservation.getUpdatedAt().isBefore(reservation.getCreatedAt()));
+        assertFalse(reservation.getUpdatedAt().isAfter(LocalDateTime.now()));
     }
 
     // --- helpers ---

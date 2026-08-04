@@ -34,6 +34,8 @@ public class RoomReservationService {
 
     private static final Logger log = LoggerFactory.getLogger(RoomReservationService.class);
 
+    private static final int EXPIRED_PENDING_THRESHOLD_MINUTES = 30;
+
     private final RoomReservationRepository roomReservationRepository;
     private final RoomRepository roomRepository;
 
@@ -170,5 +172,24 @@ public class RoomReservationService {
                     return true;
                 })
                 .orElse(false);
+    }
+
+    public int cancelExpiredPendingReservations() {
+        LocalDateTime threshold = LocalDateTime.now().minusMinutes(EXPIRED_PENDING_THRESHOLD_MINUTES);
+        List<RoomReservation> expired = roomReservationRepository
+                .findByStatusAndCreatedAtBefore(ReservationStatus.PENDING, threshold);
+        int count = 0;
+        for (RoomReservation reservation : expired) {
+            expireReservation(reservation);
+            roomReservationRepository.save(reservation);
+            count++;
+        }
+        log.info("Automatically cancelled {} expired PENDING reservation(s)", count);
+        return count;
+    }
+
+    static void expireReservation(RoomReservation reservation) {
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservation.setUpdatedAt(LocalDateTime.now());
     }
 }
