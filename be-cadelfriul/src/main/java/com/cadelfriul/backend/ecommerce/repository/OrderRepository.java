@@ -2,10 +2,12 @@ package com.cadelfriul.backend.ecommerce.repository;
 
 import com.cadelfriul.backend.ecommerce.entity.Order;
 import com.cadelfriul.backend.ecommerce.entity.OrderStatus;
+import com.cadelfriul.backend.ecommerce.entity.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,4 +40,10 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
            "LEFT JOIN FETCH o.billingAddress " +
            "WHERE o.id = :orderId")
     Optional<Order> findByIdWithDetails(@Param("orderId") UUID orderId);
+
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.status != :status")
+    long countValidOrders(@Param("status") OrderStatus status);
+
+    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o WHERE o.paymentStatus = :status")
+    BigDecimal sumCompletedOrdersRevenue(@Param("status") PaymentStatus status);
 }

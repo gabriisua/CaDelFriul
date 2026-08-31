@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,4 +31,7 @@ public interface RoomReservationRepository extends JpaRepository<RoomReservation
             @Param("roomId") UUID roomId,
             @Param("checkInDate") LocalDate checkInDate,
             @Param("checkOutDate") LocalDate checkOutDate);
+
+    @Query("SELECT COALESCE(SUM(r.totalPrice), 0) FROM RoomReservation r WHERE r.status = :status")
+    BigDecimal sumConfirmedReservationsRevenue(@Param("status") ReservationStatus status);
 }
