@@ -34,4 +34,6 @@ None
 | 260716-o9z | Add vatRate to Product model, edit dialog, and grid | 2026-07-16 | 68af691 | [260716-o9z-vat-rate](./quick/260716-o9z-vat-rate/) |
 | 260731-n1j | Update the Angular Edit Product component to display visual previews of existing product images | 2026-07-31 | 8ac6c35 | [260731-n1j-update-the-angular-edit-product-componen](./quick/260731-n1j-update-the-angular-edit-product-componen/) |
 
-Last activity: 2026-07-31 - Completed quick task 260731-n1j: Update the Angular Edit Product component to display visual previews of existing product images
+| 260831-no3 | Refactor the Angular toast notification system | 2026-08-31 | 7bc8acc | [260831-no3-refactor-the-angular-toast-notification-](./quick/260831-no3-refactor-the-angular-toast-notification-/) |
+
+Last activity: 2026-08-31 - Completed quick task 260831-no3: Refactor the Angular toast notification system
