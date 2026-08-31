@@ -1,9 +1,9 @@
 package com.cadelfriul.backend.hospitality.controller;
 
 import com.cadelfriul.backend.ecommerce.service.StripePaymentService;
+import com.cadelfriul.backend.hospitality.dto.ReservationStatusUpdateRequest;
 import com.cadelfriul.backend.hospitality.dto.RoomReservationRequestDTO;
 import com.cadelfriul.backend.hospitality.dto.RoomReservationResponseDTO;
-import com.cadelfriul.backend.hospitality.entity.ReservationStatus;
 import com.cadelfriul.backend.hospitality.service.RoomReservationService;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
@@ -75,7 +75,7 @@ public class RoomReservationController {
     @Operation(summary = "Update reservation status (admin)")
     public ResponseEntity<RoomReservationResponseDTO> updateReservationStatus(
             @PathVariable UUID id,
-            @RequestBody ReservationStatus status) {
-        return ResponseEntity.ok(roomReservationService.updateReservationStatus(id, status));
+            @Valid @RequestBody ReservationStatusUpdateRequest request) {
+        return ResponseEntity.ok(roomReservationService.updateReservationStatus(id, request.status()));
     }
 }
